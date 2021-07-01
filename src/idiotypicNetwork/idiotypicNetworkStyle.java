@@ -20,7 +20,7 @@ public class idiotypicNetworkStyle extends DefaultStyleOGL2D {
 	    @Override
 	    public VSpatial getVSpatial(Object agent, VSpatial spatial) {
 	        if (spatial == null) {
-	            spatial = shapeFactory.createShape(markFac.getMark("X"), true);
+	            spatial = shapeFactory.createShape(markFac.getMark("circle"), true);
 	        }
 	        return spatial;
 	    }

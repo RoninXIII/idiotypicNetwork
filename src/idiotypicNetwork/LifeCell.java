@@ -24,6 +24,7 @@ import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
+
 /**
  * @author mario
  *
@@ -42,10 +43,10 @@ public class LifeCell {
 	private Grid<Object> grid;
 	public static ArrayList<Object> cellsToRemove = new ArrayList<Object>();
 	
-	public LifeCell(ContinuousSpace<Object> space, Grid<Object> grid,boolean isAlive) {
+	public LifeCell(Grid<Object> grid,boolean isAlive) {
 		super();
 
-		this.space = space;
+
 		this.grid = grid;
 		this.isAlive = isAlive;
 	}
@@ -90,6 +91,14 @@ public class LifeCell {
 			 
 		 }
 		 
+		 for (GridCell<LifeCell> gridCell : gridCells) {
+			
+			 this.checkNeighbors(gridCell);
+		}
+		 
+		 
+		 
+		 
 		 if(agentsToCheck == 0 && cellsToRemove.size() != 0) {
 			 this.removeCell();
 			 }
@@ -118,6 +127,10 @@ public class LifeCell {
 		}
 		   
 		   agentsCardinality = agentsCardinality - cellsToRemove.size();
+		   
+		   if(agentsCardinality == 0) {
+			   agentsCardinality = getCardinality(); 
+		   }
 		   agentsToCheck = agentsCardinality;
 		   cellsToRemove.clear();
 		
@@ -126,7 +139,7 @@ public class LifeCell {
 	public void checkNeighbors(GridCell<LifeCell> gridCell) {
 		
 		// get the grid location of this Cell
-		   GridPoint pt = grid.getLocation (gridCell);
+		   GridPoint pt = grid.getLocation(gridCell);
 
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood.
@@ -135,7 +148,17 @@ public class LifeCell {
 		// import repast . simphony . query . space . grid . GridCell
 		   List< GridCell <LifeCell>> gridCells = nghCreator.getNeighborhood (true);
 		   
-		  this.checkLiveness(gridCells);
+		   if(this.checkLiveness(gridCells)) {
+				 
+			   Object obj = this;
+		
+				 cellsToRemove.add(obj);
+				 LifeCell newCell = new LifeCell(grid, true);
+				  Context <Object> context = ContextUtils.getContext(obj);
+				 context .add (newCell);
+		
+				 grid.moveTo (newCell, pt. getX (), pt. getY ());
+				 }
 		   	   
 		
 	}

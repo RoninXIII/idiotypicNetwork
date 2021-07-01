@@ -1,5 +1,7 @@
 package idiotypicNetwork;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
@@ -27,9 +29,9 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 	public Context build(Context<Object> context) {
 		context.setId ("idiotypicNetwork");
 		
-		int x = 5, y=5;
-		ContinuousSpaceFactory spaceFactory = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory ( null );
-		ContinuousSpace <Object > space = spaceFactory.createContinuousSpace("space", context , new RandomCartesianAdder <Object >(), new repast.simphony.space.continuous.WrapAroundBorders (), x, y);
+		int x = 10, y=10;
+	//	ContinuousSpaceFactory spaceFactory = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory ( null );
+		//ContinuousSpace <Object > space = spaceFactory.createContinuousSpace("space", context , new RandomCartesianAdder <Object >(), new repast.simphony.space.continuous.WrapAroundBorders (), x, y);
 				
 				 GridFactory gridFactory = GridFactoryFinder.createGridFactory ( null );
 				 // Correct import : import repast . simphony . space . grid . WrapAroundBorders ;
@@ -40,14 +42,25 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 				 Parameters params = RunEnvironment.getInstance ().getParameters();
 				 int cellCount = params.getInteger("cell_count");
 				  
-			
+				 // add alive cells
 				  for (int i = 0; i < cellCount ; i++) {
-				  context .add (new LifeCell(space, grid, true));
+				  context .add (new LifeCell(grid, true));
 				  }
+				  // add dead cells
+				  for (int i = 0; i < (x*y)-cellCount ; i++) {
+					  context .add (new LifeCell(grid, false));
+					  }
 		
 				  for ( Object obj : context ) {
-					   NdPoint pt = space . getLocation (obj );
-					  grid.moveTo (obj , (int)pt.getX (), (int)pt.getY());
+					  // NdPoint pt = space . getLocation (obj );
+					  int randomNum = ThreadLocalRandom.current().nextInt(0, x + 1);
+					  int randomNum2 = ThreadLocalRandom.current().nextInt(0, x + 1);
+					  
+					  while(!grid.moveTo (obj , randomNum, randomNum2)) {
+						  
+						  randomNum = ThreadLocalRandom.current().nextInt(0, x + 1);
+						  randomNum2 = ThreadLocalRandom.current().nextInt(0, x + 1);
+					  }
 				
 				
 					   }
