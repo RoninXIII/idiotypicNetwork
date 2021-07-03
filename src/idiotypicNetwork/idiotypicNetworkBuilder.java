@@ -29,7 +29,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 	public Context build(Context<Object> context) {
 		context.setId ("idiotypicNetwork");
 		
-		int x = 10, y=10;
+		int x = 20, y=20;
 	//	ContinuousSpaceFactory spaceFactory = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory ( null );
 		//ContinuousSpace <Object > space = spaceFactory.createContinuousSpace("space", context , new RandomCartesianAdder <Object >(), new repast.simphony.space.continuous.WrapAroundBorders (), x, y);
 				
@@ -46,10 +46,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 				  for (int i = 0; i < cellCount ; i++) {
 				  context .add (new LifeCell(grid, true));
 				  }
-				  // add dead cells
-				  for (int i = 0; i < (x*y)-cellCount ; i++) {
-					  context .add (new LifeCell(grid, false));
-					  }
+
 		
 				  for ( Object obj : context ) {
 					  // NdPoint pt = space . getLocation (obj );
