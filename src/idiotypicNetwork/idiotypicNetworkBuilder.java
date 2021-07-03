@@ -42,6 +42,9 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 				 Parameters params = RunEnvironment.getInstance ().getParameters();
 				 int cellCount = params.getInteger("cell_count");
 				  
+				 LifeCell cell = new LifeCell(null, false);
+				 cell.agentsCardinality = cellCount;
+				 cell.agentsToCheck = cell.agentsCardinality;
 				 // add alive cells
 				  for (int i = 0; i < cellCount ; i++) {
 				  context .add (new LifeCell(grid, true));
