@@ -3,8 +3,11 @@
  */
 package idiotypicNetwork;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import bsh.This;
+import repast.simphony.context.Context;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
@@ -12,6 +15,7 @@ import repast.simphony.random.RandomHelper;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 /**
@@ -51,6 +55,10 @@ public class Antigen {
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 		
 		GridPoint freeCell = null;
+		
+		if (!this.die(gridCells)) {
+			
+		
 		for (GridCell<Object> gridCell : gridCells) {
 			
 			
@@ -66,11 +74,54 @@ public class Antigen {
 			this.moveTowards(freeCell);
 			
 		}
-
+		}
 
 	}
 	
-public void moveTowards(GridPoint pt) {
+	public boolean die(List<GridCell<Object>> gridCells) {
+		
+		List<Antibody> antibodies = new ArrayList<>() ;
+		int killers = 0;
+		
+		for (GridCell<Object> gridCell : gridCells) {
+			
+			if (gridCell.size() != 0 &&  gridCell.items().toString().contains("Antibody")) {
+				antibodies.add(this.getAntibody((List<Object>)gridCell.items()));
+			}
+		}
+		
+		if (antibodies.size() > 1) {
+			
+			for (Antibody object : antibodies) {
+				
+				if (object.type == "killer") {
+					killers++;
+				}
+			}
+			Context<Object> context = ContextUtils.getContext(this);
+			context.remove(this);
+			return true;
+		
+		}else {
+	
+			return false;
+		} 
+		
+		
+	}
+	
+	
+	public Antibody getAntibody(List<Object> list) {
+		Antibody b = (Antibody)list.get(0);
+		
+		if (b.type == "killer") {
+			return b;
+		}else return null;
+	
+		
+	}
+	
+	public void moveTowards(GridPoint pt) {
 		
 		if (!pt.equals(grid.getLocation(this))) {
 

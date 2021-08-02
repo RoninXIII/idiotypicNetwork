@@ -6,7 +6,9 @@ package idiotypicNetwork;
 import java.util.ArrayList;
 import java.util.List;
 
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
+import repast.simphony.parameter.Parameters;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
@@ -22,22 +24,25 @@ public class Tcell {
 
 	protected String type = "";
 	private String[] typeList = {"helper","suppressor"};
+	protected static int bcells = getBcells();
+	protected static int antibodiesToKill;
 	
 	private Grid<Object> grid;
-	public static ArrayList<Object> cellsToRemove = new ArrayList<Object>();
-	public static ArrayList<GridCell<Tcell>> cellsToAdd = new ArrayList<GridCell<Tcell>>();
+
 	
-	public Tcell(Grid<Object> grid, String type) {
+	public Tcell(Grid<Object> grid, String type,int bcells) {
 		super();
 		
 		this.grid = grid;
 		this.type = type;
+		this.bcells = bcells;
 	}
 	
 	
 	
 	@ScheduledMethod(start = 1, interval = 1)
 	public void step() {
+		bcells = this.getBcells();
 
 		// get the grid location of this Cell
 		GridPoint pt = grid.getLocation(this);
@@ -74,6 +79,14 @@ public class Tcell {
 	}
 	
 	
+private static int getBcells() {
+	Parameters params = RunEnvironment.getInstance().getParameters();
+	int cellCount = params.getInteger("cell_count");
+	return cellCount;
+	}
+
+
+
 public void moveTowards(GridPoint pt) {
 		
 		if (!pt.equals(grid.getLocation(this))) {
@@ -83,6 +96,13 @@ public void moveTowards(GridPoint pt) {
 		}
 		
 	}
+
+
+public void suppress() {
+	
+	
+	
+}
 
 	
 	

@@ -64,8 +64,12 @@ public class idiotypicNetworkStyleBcell extends DefaultStyleOGL2D {
 	  	   
 	      	   Bcell b ;
 	  	 	    	if(object instanceof Bcell) {
+	  	 	    		
 	       		        b = (Bcell) object;
-	  	 		        return "B"+b.id;
+	       		     if (b.type == "naive") {
+	       		    	 return "B"+b.id;
+						}else return "B"+b.id+"-An"+b.antigenId;
+	  	 		       
 	  	 	        } else {
 	  	 	            return "";
 	  	 	        }
@@ -108,7 +112,7 @@ public class idiotypicNetworkStyleBcell extends DefaultStyleOGL2D {
 
 	    @Override
 	    public float getScale(Object object) {
-	        return 10;
+	        return 20;
 	    }
 	    
 }

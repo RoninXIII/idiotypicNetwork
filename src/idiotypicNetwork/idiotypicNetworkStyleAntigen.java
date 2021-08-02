@@ -107,7 +107,7 @@ public class idiotypicNetworkStyleAntigen  extends DefaultStyleOGL2D {
 
 	    @Override
 	    public float getScale(Object object) {
-	        return 15;
+	        return 20;
 	    }
 	    
 	

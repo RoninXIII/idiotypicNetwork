@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -32,12 +31,13 @@ import repast.simphony.util.SimUtilities;
 public class Bcell {
 
 	protected String type = ""; // check whether the cell is alive or not
-	private String[] typeList = {"naive","activated"};
+	private String[] typeList = { "naive", "activated" };
 	private ContinuousSpace<Object> space;
 	protected int id;
+	protected int antigenId;
 	public static int agentsCardinality = getCardinality();
 	public static int agentsToCheck = agentsCardinality;
-	
+
 	/*
 	 * The Cell will move about the ContinuousSpace and we will simply round the
 	 * ContinuousSpace location to determine the corresponding Grid location
@@ -46,10 +46,9 @@ public class Bcell {
 	public static ArrayList<Object> cellsToRemove = new ArrayList<Object>();
 	public static ArrayList<GridCell<Bcell>> cellsToAdd = new ArrayList<GridCell<Bcell>>();
 
-	public Bcell(Grid<Object> grid, String type,int id) {
+	public Bcell(Grid<Object> grid, String type, int id) {
 		super();
 
-		
 		this.grid = grid;
 		this.type = type;
 		this.id = id;
@@ -74,193 +73,239 @@ public class Bcell {
 
 		// import repast . simphony . query . space . grid . GridCell
 		List<GridCell<Object>> gridCells = nghCreator.getNeighborhood(false);
-		
+
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-		
+
 		GridPoint freeCell = null;
-		//GridPoint freeCellForClone = null;
-		
-		if (!this.lookForAntigen(gridCells)) {
+		// GridPoint freeCellForClone = null;
+
+		if (this.lookForAntigen(gridCells) && this.type == "activated") {
+
+			Antigen antigen = (Antigen) this.getAntigen(gridCells);
+
+			if (this.antigenId == antigen.id) {
+				// this.cloneCell(gridCells);
+				nghCreator = new GridCellNgh<Object>(grid, pt, Object.class, 1, 1);
+
+				// import repast . simphony . query . space . grid . GridCell
+				gridCells = nghCreator.getNeighborhood(false);
+
+				SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
+
+				this.releaseAntiBodies(gridCells);
+			}
+
+		} else if (this.lookForApc(gridCells)) {
+
+			Antigen antigen = this.getAntigenFromApc(gridCells);
+
+			if (antigen != null) {
+				this.antigenId = antigen.id;
+				this.type = typeList[1];
+			}
+
+		} else if (this.lookForTcell(gridCells)) {
+			Tcell tcell = this.getTcell(gridCells);
 			
-		
-		for (GridCell<Object> gridCell : gridCells) {
-			
-			
-			if (gridCell.size() == 0) {
-				freeCell = gridCell.getPoint();
+			if (tcell.type == "helper") {
+				this.cloneCell(gridCells);
+				tcell.bcells++;
+			}else {
+				
 				
 			}
 			
-		}
-		
-		}else {
 			
-			this.cloneCell(gridCells);
-			
-			
-		}
-		
-		if (freeCell != null) {
-			//this.type = typeList[1];
-			this.moveTowards(freeCell);
-			
-		}
-		
-	
-	/*	
-		int numberOfNeighbors = this.checkLiveness(gridCells);
-		
-		
-		agentsToCheck--;
-
-		if (numberOfNeighbors == 2 || numberOfNeighbors == 3) {
-
-			// do nothing
 
 		} else {
 
-			cellsToRemove.add(this);
+			for (GridCell<Object> gridCell : gridCells) {
 
-		}
+				if (gridCell.size() == 0) {
+					freeCell = gridCell.getPoint();
 
-		for (GridCell<Bcell> gridCell : gridCells) {
-
-			List<Bcell> list = (List<Bcell>) gridCell.items();
-
-			if (list.isEmpty()) {
-
-				List<GridCell<Bcell>> neighborsCells = getNeighbors(gridCell);
-
-				if (checkLiveness(neighborsCells) == 3 && !isAlreadyPresent(gridCell)) {
-								
-					
-					cellsToAdd.add(gridCell);
 				}
-		
 
 			}
+		}
+
+		if (freeCell != null) {
+			// this.type = typeList[1];
+			this.moveTowards(freeCell);
 
 		}
 
-		if (agentsToCheck == 0) {
-
-			
-			this.addCells();
-			this.removeCell();
-
-		
-
-			agentsToCheck = agentsCardinality;
-		}*/
-
 	}
-	
-	
-	
-	public boolean lookForAntigen(List<GridCell<Object>> gridCells){
+
+	private Tcell getTcell(List<GridCell<Object>> gridCells) {
 		
 		for (GridCell<Object> gridCell : gridCells) {
-			
-			if (gridCell.size() != 0 && gridCell.items().toString().contains("Antigen") && !gridCell.items().toString().contains("PresentingCell")) {
+
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("Tcell")) {
+				List<Object> list = (List<Object>) gridCell.items();
+
+				Tcell tcell = (Tcell) list.get(0);
+
+				return tcell;
+			}
+		}
+
+		return null;
+	}
+
+	private Antigen getAntigen(List<GridCell<Object>> gridCells) {
+
+		for (GridCell<Object> gridCell : gridCells) {
+
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("Antigen") && gridCell.size() != 0
+					&& !gridCell.items().toString().contains("AntigenPresentingCell")) {
+				List<Object> list = (List<Object>) gridCell.items();
+
+				Antigen antigen = (Antigen) list.get(0);
+
+				return antigen;
+			}
+		}
+
+		return null;
+	}
+
+	private Antigen getAntigenFromApc(List<GridCell<Object>> gridCells) {
+
+		for (GridCell<Object> gridCell : gridCells) {
+
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("AntigenPresentingCell")) {
+				List<Object> list = (List<Object>) gridCell.items();
+
+				AntigenPresentingCell apc = (AntigenPresentingCell) list.get(0);
+
+				if (apc.antigensToPresent.size() != 0) {
+					Antigen antigen = apc.antigensToPresent.get(0);
+					apc.antigensToPresent.remove(0);
+					return antigen;
+				} else
+					return null;
+			}
+		}
+
+		return null;
+	}
+
+	public boolean lookForAntigen(List<GridCell<Object>> gridCells) {
+
+		for (GridCell<Object> gridCell : gridCells) {
+
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("Antigen")
+					&& !gridCell.items().toString().contains("PresentingCell")) {
 				return true;
 			}
 		}
-		
+
 		return false;
 	}
-	
-	
-	
+
+	public boolean lookForApc(List<GridCell<Object>> gridCells) {
+
+		for (GridCell<Object> gridCell : gridCells) {
+
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("AntigenPresentingCell")) {
+
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
+	public boolean lookForTcell(List<GridCell<Object>> gridCells) {
+
+		for (GridCell<Object> gridCell : gridCells) {
+
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("Tcell")) {
+
+				return true;
+			}
+		}
+
+		return false;
+
+	}
+
 	public boolean cloneCell(List<GridCell<Object>> gridCells) {
-		
+
 		for (GridCell<Object> gridCell : gridCells) {
-			
+
 			if (gridCell.size() == 0) {
-				 Context <Object > context = ContextUtils.getContext(this);
+				Context<Object> context = ContextUtils.getContext(this);
 				GridPoint pt = gridCell.getPoint();
-				Bcell newCell = new Bcell(grid, "activated", this.id);
-				 context .add (newCell );
-				grid . moveTo ( newCell , pt. getX (), pt. getY ());
+				Bcell newCell = new Bcell(grid, "naive", this.id);
+				context.add(newCell);
+				grid.moveTo(newCell, pt.getX(), pt.getY());
 				return true;
 			}
 		}
-		
+
 		return false;
-		
-		
+
 	}
-	
-	
-public void moveTowards(GridPoint pt) {
-		
+
+	public void moveTowards(GridPoint pt) {
+
 		if (!pt.equals(grid.getLocation(this))) {
-			
-			/*NdPoint myPoint = space.getLocation(this);
-			NdPoint otherPoint = new NdPoint(pt.getX(),pt.getY());
- 			double angle = SpatialMath.calcAngleFor2DMovement(space, myPoint, otherPoint);
- 			space.moveByVector(this, 1, angle,0);
- 			myPoint = space.getLocation(this);*/
- 			grid.moveTo(this, pt.getX(), pt.getY());
-			//moved = true;
+
+			grid.moveTo(this, pt.getX(), pt.getY());
+
 		}
-		
+
 	}
-	
-	
 
-
-	
 	public boolean isAlreadyPresent(GridCell<Bcell> gridCell) {
-		
-	
-		
+
 		for (GridCell<Bcell> gridCell2 : cellsToAdd) {
-			
+
 			if (gridCell2.getPoint().equals(gridCell.getPoint())) {
-				
+
 				return true;
 			}
 		}
-		
+
 		return false;
-		
 
 	}
-/*	private void addCells() {
+	/*
+	 * 
+	 * /*private void removeCell() {
+	 * 
+	 * for (Object obj : cellsToRemove) { Context<Object> context =
+	 * ContextUtils.getContext(obj); context.remove(obj);
+	 * 
+	 * }
+	 * 
+	 * agentsCardinality = agentsCardinality - cellsToRemove.size();
+	 * 
+	 * if (agentsCardinality == 0) { agentsCardinality = getCardinality(); }
+	 * 
+	 * cellsToRemove.clear();
+	 * 
+	 * }
+	 */
 
-		for (GridCell<Bcell> gridCell : cellsToAdd) {
+	public void releaseAntiBodies(List<GridCell<Object>> gridCells) {
 
-			Bcell cell = new Bcell(grid, typeList[1]);
-			Object obj = this;
-			GridPoint pt = gridCell.getPoint();
-			Context<Object> context = ContextUtils.getContext(obj);
-			context.add(cell);
-			grid.moveTo(cell, pt.getX(), pt.getY());
+		Context<Object> context = ContextUtils.getContext(this);
+
+		for (GridCell<Object> gridCell : gridCells) {
+
+			if (gridCell.size() == 0) {
+				GridPoint pt = gridCell.getPoint();
+				Antibody ab = new Antibody(grid, this.id, "killer");
+				context.add(ab);
+				grid.moveTo(ab, pt.getX(), pt.getY());
+			}
 		}
 
-		agentsCardinality = agentsCardinality + cellsToAdd.size();
-
-		cellsToAdd.clear();
-
-	}*/
-
-	/*private void removeCell() {
-
-		for (Object obj : cellsToRemove) {
-			Context<Object> context = ContextUtils.getContext(obj);
-			context.remove(obj);
-
-		}
-
-		agentsCardinality = agentsCardinality - cellsToRemove.size();
-
-		if (agentsCardinality == 0) {
-			agentsCardinality = getCardinality();
-		}
-
-		cellsToRemove.clear();
-
-	}*/
+	}
 
 	public List<GridCell<Bcell>> getNeighbors(GridCell<Bcell> cell) {
 
@@ -286,25 +331,6 @@ public void moveTowards(GridPoint pt) {
 		 * 
 		 * grid.moveTo (newCell, pt. getX (), pt. getY ()); }
 		 */
-
-	}
-
-	public int checkLiveness(List<GridCell<Bcell>> neighbCells) {
-
-		int countCells = 0;
-		int num = 0;
-
-		for (GridCell<Bcell> gridCell : neighbCells) {
-
-			num = gridCell.size();
-
-			if (num == 1) {
-				countCells++;
-			}
-
-		}
-
-		return countCells;
 
 	}
 

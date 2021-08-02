@@ -5,7 +5,7 @@ package idiotypicNetwork;
 
 import java.util.List;
 
-
+import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 import repast.simphony.query.space.grid.GridCell;
@@ -32,6 +32,58 @@ public class Antibody {
 		this.grid = grid;
 		this.id = id;
 		this.type = type;
+	}
+	
+	
+	
+	@ScheduledMethod(start = 1, interval = 1)
+	public void step() {
+
+		// get the grid location of this Cell
+		GridPoint pt = grid.getLocation(this);
+
+		// use the GridCellNgh class to create GridCells for
+		// the surrounding neighborhood.
+		GridCellNgh<Object> nghCreator = new GridCellNgh<Object>(grid, pt, Object.class, 1, 1);
+
+		// import repast . simphony . query . space . grid . GridCell
+		List<GridCell<Object>> gridCells = nghCreator.getNeighborhood(false);
+		
+		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
+		
+		GridPoint freeCell = null;
+		
+	
+			
+		
+		for (GridCell<Object> gridCell : gridCells) {
+			
+			
+			if (gridCell.size() == 0) {
+				freeCell = gridCell.getPoint();
+				
+			}
+			
+		}
+		
+		if (freeCell != null) {
+			
+			this.moveTowards(freeCell);
+			
+		}
+	
+
+	}
+	
+	
+public void moveTowards(GridPoint pt) {
+		
+		if (!pt.equals(grid.getLocation(this))) {
+
+ 			grid.moveTo(this, pt.getX(), pt.getY());
+			//moved = true;
+		}
+		
 	}
 	
 	

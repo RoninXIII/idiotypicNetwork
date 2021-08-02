@@ -58,7 +58,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 				  
 				// add T cells
 				  for (int j = 0; j < tCellCount ; j++) {
-				  context .add (new Tcell(grid, "helper"));
+				  context .add (new Tcell(grid, getRandomTcell(),bCellCount));
 				  }
 				  
 				  // add Antigens
@@ -66,7 +66,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 					  context .add (new Antigen(grid, j));
 					  }
 				  
-				  // add Antigens
+				  // add Antigens Presenting Cell
 				  for (int j = 0; j < apcCount ; j++) {
 					  context .add (new AntigenPresentingCell(grid, new ArrayList<>()));
 					  }
@@ -88,5 +88,18 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 		
 		return context;
 	}
+	
+	
+	public String getRandomTcell() {
+		String[] typeList = {"helper","suppressor"};
+		int randomNum = ThreadLocalRandom.current().nextInt(0, 2);
+		
+		return typeList[randomNum];
+		
+	}
+	
+	
+	
+	
 
 }

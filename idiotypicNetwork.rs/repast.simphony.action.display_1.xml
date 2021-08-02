@@ -18,6 +18,10 @@
       <string>idiotypicNetwork.Tcell</string>
       <string>idiotypicNetwork.idiotypicNetworkStyleTcell</string>
     </entry>
+    <entry>
+      <string>idiotypicNetwork.Antibody</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleAntibody</string>
+    </entry>
   </styles>
   <editedStyles>
     <entry>
@@ -36,6 +40,10 @@
       <string>idiotypicNetwork.Tcell</string>
       <null/>
     </entry>
+    <entry>
+      <string>idiotypicNetwork.Antibody</string>
+      <null/>
+    </entry>
   </editedStyles>
   <netStyles/>
   <editedNetStyles/>
@@ -47,7 +55,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-1738115292</hashCode>
+    <hashCode>-1648926375</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>grid</layoutProjection>
@@ -69,6 +77,10 @@
       <string>idiotypicNetwork.Tcell</string>
       <int>0</int>
     </entry>
+    <entry>
+      <string>idiotypicNetwork.Antibody</string>
+      <int>4</int>
+    </entry>
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>
@@ -78,7 +90,7 @@
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
-    <unitSize>15.0</unitSize>
+    <unitSize>20.0</unitSize>
   </visualizationProperties>
   <projectionDescriptors>
     <entry>
@@ -95,7 +107,7 @@
               </entry>
               <entry>
                 <string>UNIT_SIZE</string>
-                <float>15.0</float>
+                <float>20.0</float>
               </entry>
               <entry>
                 <string>SHOW</string>

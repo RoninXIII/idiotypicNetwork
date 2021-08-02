@@ -16,9 +16,8 @@ import saf.v3d.scene.VSpatial;
  * @author mario
  *
  */
-public class idiotypicNetworkStyleApc extends DefaultStyleOGL2D {
+public class idiotypicNetworkStyleAntibody  extends DefaultStyleOGL2D {
 
-	
 	
 	 private static SimpleMarkFactory markFac = new SimpleMarkFactory();
 
@@ -30,7 +29,7 @@ public class idiotypicNetworkStyleApc extends DefaultStyleOGL2D {
 	    @Override
 	    public VSpatial getVSpatial(Object agent, VSpatial spatial) {
 	        if (spatial == null) {
-	            spatial = shapeFactory.createShape(markFac.getMark("square"), true);
+	            spatial = shapeFactory.createShape(markFac.getMark("circle"), true);
 	        }
 	        return spatial;
 	    }
@@ -38,38 +37,35 @@ public class idiotypicNetworkStyleApc extends DefaultStyleOGL2D {
 	    
 	    @Override
 	    public int getBorderSize(Object agent) {
-	        return 4;
+	        return 5;
 	    }
 	    
 	    
 
 	    @Override
 	    public Color getColor(Object object) {
-	    
-	      
-	        if (object instanceof AntigenPresentingCell) {
-	     
-       
-		            return Color.ORANGE;
+	    	
+	      Antibody a;
+	        if (object instanceof Antibody) {
+	        	
+	        	a = (Antibody) object;
+	        	a.type = "Killer";
+	           return Color.RED;
 	            
 	        } else {
-	            return Color.BLACK;
+	            return Color.BLUE;
 	        }
 	       
-	       
-	       
-	        
-	        
 	    }
 	    
 	    
 	    @Override
 	  		public String getLabel(Object object) {
-	  	   
+	    	Antibody a;
 	      	   
-	  	 	    	if(object instanceof AntigenPresentingCell) {
-	       		        
-	  	 		        return "APC";
+	  	 	    	if(object instanceof Antibody) {
+	  	 	    		a = (Antibody) object;
+	  	 		        return "An"+a.id;
 	  	 	        } else {
 	  	 	            return "";
 	  	 	        }
@@ -78,19 +74,8 @@ public class idiotypicNetworkStyleApc extends DefaultStyleOGL2D {
 	    
 	    @Override
 		public Color getBorderColor(Object object) {
-		AntigenPresentingCell a;
 		
-	    	if (object instanceof AntigenPresentingCell) {
-	   	     a = (AntigenPresentingCell) object; 
-	    	     
-	   	     if (!a.antigensToPresent.isEmpty()) {
-				return Color.BLACK;
-			}else
-	            return Color.ORANGE;
-            
-        } else {
-            return Color.BLACK;
-        }
+			return Color.RED;
 		}
 	    
 	    
@@ -111,7 +96,7 @@ public class idiotypicNetworkStyleApc extends DefaultStyleOGL2D {
 		@Override
 	    public Position getLabelPosition(Object object) {
 	    	
-	    	if (object instanceof AntigenPresentingCell) {
+	    	if (object instanceof Antibody) {
 				return Position.SOUTH; 
 			}else return null;
 	    }
@@ -123,6 +108,7 @@ public class idiotypicNetworkStyleApc extends DefaultStyleOGL2D {
 
 	    @Override
 	    public float getScale(Object object) {
-	        return 20;
+	        return 5;
 	    }
+	    
 }
