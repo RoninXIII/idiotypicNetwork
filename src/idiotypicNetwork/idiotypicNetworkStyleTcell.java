@@ -58,7 +58,7 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	 	        	t = (Tcell) object;
 	 	        	
 	 	       		        
-	 		        return "T-Cell";
+	 		        return "T";
 	 	        } else {
 	 	            return "";
 	 	        }

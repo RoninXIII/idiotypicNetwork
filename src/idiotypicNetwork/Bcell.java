@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 
-
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -79,6 +78,11 @@ public class Bcell {
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 		
 		GridPoint freeCell = null;
+		//GridPoint freeCellForClone = null;
+		
+		if (!this.lookForAntigen(gridCells)) {
+			
+		
 		for (GridCell<Object> gridCell : gridCells) {
 			
 			
@@ -86,6 +90,13 @@ public class Bcell {
 				freeCell = gridCell.getPoint();
 				
 			}
+			
+		}
+		
+		}else {
+			
+			this.cloneCell(gridCells);
+			
 			
 		}
 		
@@ -146,12 +157,30 @@ public class Bcell {
 	
 	
 	
+	public boolean lookForAntigen(List<GridCell<Object>> gridCells){
+		
+		for (GridCell<Object> gridCell : gridCells) {
+			
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("Antigen") && !gridCell.items().toString().contains("PresentingCell")) {
+				return true;
+			}
+		}
+		
+		return false;
+	}
+	
+	
+	
 	public boolean cloneCell(List<GridCell<Object>> gridCells) {
 		
 		for (GridCell<Object> gridCell : gridCells) {
 			
-			if (gridCell.size() != 0) {
-				
+			if (gridCell.size() == 0) {
+				 Context <Object > context = ContextUtils.getContext(this);
+				GridPoint pt = gridCell.getPoint();
+				Bcell newCell = new Bcell(grid, "activated", this.id);
+				 context .add (newCell );
+				grid . moveTo ( newCell , pt. getX (), pt. getY ());
 				return true;
 			}
 		}
@@ -195,8 +224,7 @@ public void moveTowards(GridPoint pt) {
 		
 		return false;
 		
-		
-		
+
 	}
 /*	private void addCells() {
 
@@ -216,7 +244,7 @@ public void moveTowards(GridPoint pt) {
 
 	}*/
 
-	private void removeCell() {
+	/*private void removeCell() {
 
 		for (Object obj : cellsToRemove) {
 			Context<Object> context = ContextUtils.getContext(obj);
@@ -232,7 +260,7 @@ public void moveTowards(GridPoint pt) {
 
 		cellsToRemove.clear();
 
-	}
+	}*/
 
 	public List<GridCell<Bcell>> getNeighbors(GridCell<Bcell> cell) {
 

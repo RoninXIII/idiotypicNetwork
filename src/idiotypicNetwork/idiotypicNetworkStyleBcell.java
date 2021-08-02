@@ -65,7 +65,7 @@ public class idiotypicNetworkStyleBcell extends DefaultStyleOGL2D {
 	      	   Bcell b ;
 	  	 	    	if(object instanceof Bcell) {
 	       		        b = (Bcell) object;
-	  	 		        return "B-Cell"+b.id;
+	  	 		        return "B"+b.id;
 	  	 	        } else {
 	  	 	            return "";
 	  	 	        }
