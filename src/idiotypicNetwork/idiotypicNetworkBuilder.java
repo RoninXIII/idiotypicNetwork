@@ -1,5 +1,6 @@
 package idiotypicNetwork;
 
+import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
 import repast.simphony.context.Context;
@@ -40,15 +41,35 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 				 
 				 
 				 Parameters params = RunEnvironment.getInstance ().getParameters();
-				 int cellCount = params.getInteger("cell_count");
-				  
-				 LifeCell cell = new LifeCell(null, false);
-				 cell.agentsCardinality = cellCount;
+				 int bCellCount = params.getInteger("cell_count");
+				 int tCellCount = params.getInteger("Tcell_count"); 
+				 int antigenCount = params.getInteger("Antigen_count");
+				 int apcCount = params.getInteger("APC_count");
+				 
+				 Bcell cell = new Bcell(null, "naive",0);
+				 cell.agentsCardinality = bCellCount;
 				 cell.agentsToCheck = cell.agentsCardinality;
-				 // add alive cells
-				  for (int i = 0; i < cellCount ; i++) {
-				  context .add (new LifeCell(grid, true));
+				 
+				// Tcell cell2 = new Tcell(null, "helper");
+				 // add B cells
+				  for (int i = 0; i < bCellCount ; i++) {
+				  context .add (new Bcell(grid, "naive",i));
 				  }
+				  
+				// add T cells
+				  for (int j = 0; j < tCellCount ; j++) {
+				  context .add (new Tcell(grid, "helper"));
+				  }
+				  
+				  // add Antigens
+				  for (int j = 0; j < antigenCount ; j++) {
+					  context .add (new Antigen(grid, j));
+					  }
+				  
+				  // add Antigens
+				  for (int j = 0; j < apcCount ; j++) {
+					  context .add (new AntigenPresentingCell(grid, new ArrayList<>()));
+					  }
 
 		
 				  for ( Object obj : context ) {

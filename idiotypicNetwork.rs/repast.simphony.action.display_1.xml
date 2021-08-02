@@ -1,15 +1,39 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor simphonyVersion="2.8.0">
-  <name>Grid display</name>
+  <name>Grid Display</name>
   <type>2D</type>
   <styles>
     <entry>
-      <string>idiotypicNetwork.LifeCell</string>
-      <string>idiotypicNetwork.idiotypicNetworkStyle</string>
+      <string>idiotypicNetwork.AntigenPresentingCell</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleApc</string>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Antigen</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleAntigen</string>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Bcell</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleBcell</string>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Tcell</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleTcell</string>
     </entry>
   </styles>
   <editedStyles>
     <entry>
-      <string>idiotypicNetwork.LifeCell</string>
+      <string>idiotypicNetwork.AntigenPresentingCell</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Antigen</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Bcell</string>
+      <null/>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Tcell</string>
       <null/>
     </entry>
   </editedStyles>
@@ -23,14 +47,26 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-2040830584</hashCode>
+    <hashCode>-1738115292</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>grid</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
-      <string>idiotypicNetwork.LifeCell</string>
+      <string>idiotypicNetwork.AntigenPresentingCell</string>
+      <int>2</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Antigen</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Bcell</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Tcell</string>
       <int>0</int>
     </entry>
   </layerOrder>

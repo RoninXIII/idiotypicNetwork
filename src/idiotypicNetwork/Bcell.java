@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+
+
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -28,26 +30,30 @@ import repast.simphony.util.SimUtilities;
  * @author mario
  *
  */
-public class LifeCell {
+public class Bcell {
 
-	protected boolean isAlive = false; // check whether the cell is alive or not
-
+	protected String type = ""; // check whether the cell is alive or not
+	private String[] typeList = {"naive","activated"};
 	private ContinuousSpace<Object> space;
+	protected int id;
 	public static int agentsCardinality = getCardinality();
 	public static int agentsToCheck = agentsCardinality;
+	
 	/*
 	 * The Cell will move about the ContinuousSpace and we will simply round the
 	 * ContinuousSpace location to determine the corresponding Grid location
 	 */
 	private Grid<Object> grid;
 	public static ArrayList<Object> cellsToRemove = new ArrayList<Object>();
-	public static ArrayList<GridCell<LifeCell>> cellsToAdd = new ArrayList<GridCell<LifeCell>>();
+	public static ArrayList<GridCell<Bcell>> cellsToAdd = new ArrayList<GridCell<Bcell>>();
 
-	public LifeCell(Grid<Object> grid, boolean isAlive) {
+	public Bcell(Grid<Object> grid, String type,int id) {
 		super();
 
+		
 		this.grid = grid;
-		this.isAlive = isAlive;
+		this.type = type;
+		this.id = id;
 	}
 
 	private static int getCardinality() {
@@ -65,12 +71,35 @@ public class LifeCell {
 
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood.
-		GridCellNgh<LifeCell> nghCreator = new GridCellNgh<LifeCell>(grid, pt, LifeCell.class, 1, 1);
+		GridCellNgh<Object> nghCreator = new GridCellNgh<Object>(grid, pt, Object.class, 1, 1);
 
 		// import repast . simphony . query . space . grid . GridCell
-		List<GridCell<LifeCell>> gridCells = nghCreator.getNeighborhood(false);
-
+		List<GridCell<Object>> gridCells = nghCreator.getNeighborhood(false);
+		
+		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
+		
+		GridPoint freeCell = null;
+		for (GridCell<Object> gridCell : gridCells) {
+			
+			
+			if (gridCell.size() == 0) {
+				freeCell = gridCell.getPoint();
+				
+			}
+			
+		}
+		
+		if (freeCell != null) {
+			//this.type = typeList[1];
+			this.moveTowards(freeCell);
+			
+		}
+		
+	
+	/*	
 		int numberOfNeighbors = this.checkLiveness(gridCells);
+		
+		
 		agentsToCheck--;
 
 		if (numberOfNeighbors == 2 || numberOfNeighbors == 3) {
@@ -83,13 +112,13 @@ public class LifeCell {
 
 		}
 
-		for (GridCell<LifeCell> gridCell : gridCells) {
+		for (GridCell<Bcell> gridCell : gridCells) {
 
-			List<LifeCell> list = (List<LifeCell>) gridCell.items();
+			List<Bcell> list = (List<Bcell>) gridCell.items();
 
 			if (list.isEmpty()) {
 
-				List<GridCell<LifeCell>> neighborsCells = getNeighbors(gridCell);
+				List<GridCell<Bcell>> neighborsCells = getNeighbors(gridCell);
 
 				if (checkLiveness(neighborsCells) == 3 && !isAlreadyPresent(gridCell)) {
 								
@@ -111,16 +140,52 @@ public class LifeCell {
 		
 
 			agentsToCheck = agentsCardinality;
-		}
+		}*/
 
 	}
+	
+	
+	
+	public boolean cloneCell(List<GridCell<Object>> gridCells) {
+		
+		for (GridCell<Object> gridCell : gridCells) {
+			
+			if (gridCell.size() != 0) {
+				
+				return true;
+			}
+		}
+		
+		return false;
+		
+		
+	}
+	
+	
+public void moveTowards(GridPoint pt) {
+		
+		if (!pt.equals(grid.getLocation(this))) {
+			
+			/*NdPoint myPoint = space.getLocation(this);
+			NdPoint otherPoint = new NdPoint(pt.getX(),pt.getY());
+ 			double angle = SpatialMath.calcAngleFor2DMovement(space, myPoint, otherPoint);
+ 			space.moveByVector(this, 1, angle,0);
+ 			myPoint = space.getLocation(this);*/
+ 			grid.moveTo(this, pt.getX(), pt.getY());
+			//moved = true;
+		}
+		
+	}
+	
+	
+
 
 	
-	public boolean isAlreadyPresent(GridCell<LifeCell> gridCell) {
+	public boolean isAlreadyPresent(GridCell<Bcell> gridCell) {
 		
 	
 		
-		for (GridCell<LifeCell> gridCell2 : cellsToAdd) {
+		for (GridCell<Bcell> gridCell2 : cellsToAdd) {
 			
 			if (gridCell2.getPoint().equals(gridCell.getPoint())) {
 				
@@ -133,11 +198,11 @@ public class LifeCell {
 		
 		
 	}
-	private void addCells() {
+/*	private void addCells() {
 
-		for (GridCell<LifeCell> gridCell : cellsToAdd) {
+		for (GridCell<Bcell> gridCell : cellsToAdd) {
 
-			LifeCell cell = new LifeCell(grid, true);
+			Bcell cell = new Bcell(grid, typeList[1]);
 			Object obj = this;
 			GridPoint pt = gridCell.getPoint();
 			Context<Object> context = ContextUtils.getContext(obj);
@@ -149,7 +214,7 @@ public class LifeCell {
 
 		cellsToAdd.clear();
 
-	}
+	}*/
 
 	private void removeCell() {
 
@@ -169,17 +234,17 @@ public class LifeCell {
 
 	}
 
-	public List<GridCell<LifeCell>> getNeighbors(GridCell<LifeCell> cell) {
+	public List<GridCell<Bcell>> getNeighbors(GridCell<Bcell> cell) {
 
 		// get the grid location of this Cell
 		GridPoint pt = cell.getPoint();
 
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood.
-		GridCellNgh<LifeCell> nghCreator = new GridCellNgh<LifeCell>(grid, pt, LifeCell.class, 1, 1);
+		GridCellNgh<Bcell> nghCreator = new GridCellNgh<Bcell>(grid, pt, Bcell.class, 1, 1);
 
 		// import repast . simphony . query . space . grid . GridCell
-		List<GridCell<LifeCell>> gridCells = nghCreator.getNeighborhood(true);
+		List<GridCell<Bcell>> gridCells = nghCreator.getNeighborhood(true);
 
 		return gridCells;
 		/*
@@ -188,7 +253,7 @@ public class LifeCell {
 		 * 
 		 * 
 		 * 
-		 * LifeCell newCell = new LifeCell(grid, true); Context <Object> context =
+		 * Bcell newCell = new Bcell(grid, true); Context <Object> context =
 		 * ContextUtils.getContext(cell); context .add (newCell);
 		 * 
 		 * grid.moveTo (newCell, pt. getX (), pt. getY ()); }
@@ -196,12 +261,12 @@ public class LifeCell {
 
 	}
 
-	public int checkLiveness(List<GridCell<LifeCell>> neighbCells) {
+	public int checkLiveness(List<GridCell<Bcell>> neighbCells) {
 
 		int countCells = 0;
 		int num = 0;
 
-		for (GridCell<LifeCell> gridCell : neighbCells) {
+		for (GridCell<Bcell> gridCell : neighbCells) {
 
 			num = gridCell.size();
 
