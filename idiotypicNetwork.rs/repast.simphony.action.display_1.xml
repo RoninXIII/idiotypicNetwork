@@ -55,7 +55,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-2023243343</hashCode>
+    <hashCode>309003058</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>grid</layoutProjection>
@@ -103,7 +103,7 @@
             <map>
               <entry>
                 <string>COLOR</string>
-                <int>-16777216</int>
+                <int>-6710887</int>
               </entry>
               <entry>
                 <string>UNIT_SIZE</string>
@@ -111,7 +111,7 @@
               </entry>
               <entry>
                 <string>SHOW</string>
-                <boolean>false</boolean>
+                <boolean>true</boolean>
               </entry>
             </map>
           </entry>

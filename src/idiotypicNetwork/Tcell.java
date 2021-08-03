@@ -6,6 +6,7 @@ package idiotypicNetwork;
 import java.util.ArrayList;
 import java.util.List;
 
+import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.parameter.Parameters;
@@ -14,6 +15,7 @@ import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 /**
@@ -27,7 +29,7 @@ public class Tcell {
 	protected String type2 = "";
 	protected int antigenId = 0;
 	protected static int bcells = getBcells();
-	protected static int antibodiesToKill;
+	protected static List<Integer> antibodiesToKill = new ArrayList<>();
 	
 	private Grid<Object> grid;
 
@@ -62,7 +64,7 @@ public class Tcell {
 		GridPoint freeCell = null;
 		
 		
-		  if (this.type2 == "naive" && this.lookForApc(gridCells)) {
+		  if (this.type2 == "naive" && this.type == "helper" && this.lookForApc(gridCells)) {
 
 				Antigen antigen = this.getAntigenFromApc(gridCells);
 
@@ -73,7 +75,35 @@ public class Tcell {
 
 	
 		
-		  }else {
+		  }else if ( this.type == "suppressor") {
+			
+			  for (GridCell<Object> gridCell : gridCells) {
+					
+					
+					if (gridCell.size() != 0 &&  gridCell.items().toString().contains("Antibody")) {
+						Antibody antibody =  this.getAntibody((List<Object>)gridCell.items());
+						
+						if(antibodiesToKill.contains(antibody.id)) {
+							
+							
+							Context<Object> context = ContextUtils.getContext(this);
+							
+							context.remove(antibody);
+			
+						}
+						
+						
+						
+					}else if(gridCell.size() == 0) {
+						freeCell = gridCell.getPoint();
+						this.moveTowards(freeCell);
+						
+					}
+					
+				}
+			  
+			  
+		}else {
 			  
 				
 				for (GridCell<Object> gridCell : gridCells) {
@@ -99,6 +129,18 @@ public class Tcell {
 	
 	
 	
+	public Antibody getAntibody(List<Object> list) {
+		Antibody b = (Antibody)list.get(0);
+		
+		if (b.type.equalsIgnoreCase("killer")) {
+			return b;
+		}else return null;
+	
+		
+	}
+
+
+
 	private Antigen getAntigenFromApc(List<GridCell<Object>> gridCells) {
 
 		for (GridCell<Object> gridCell : gridCells) {
