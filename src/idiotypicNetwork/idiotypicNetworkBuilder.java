@@ -58,7 +58,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 				  
 				// add T cells
 				  for (int j = 0; j < tCellCount ; j++) {
-				  context .add (new Tcell(grid, getRandomTcell(),bCellCount));
+				  context .add (new Tcell(grid, getRandomTcell(),bCellCount,"naive"));
 				  }
 				  
 				  // add Antigens

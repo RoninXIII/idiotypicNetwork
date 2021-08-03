@@ -57,8 +57,10 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	 	        	
 	 	        	t = (Tcell) object;
 	 	        	
-	 	       		        
-	 		        return "T";
+	 	        	if (t.type2 == "activated") {
+						
+	 	        		return "Th-"+t.antigenId;
+					}else return "T";
 	 	        } else {
 	 	            return "";
 	 	        }
@@ -70,7 +72,23 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	    @Override
 		public Color getBorderColor(Object object) {
 		
-			return Color.BLACK;
+     Tcell t;
+	        
+	        if(object instanceof Tcell) {
+	        	
+	        	t = (Tcell) object;
+	        	
+	        	 
+	        	if (t.type2 == "naive") {
+		            return Color.RED;
+		        } else {
+		            return Color.GREEN;
+		        }
+		        
+		        
+	        } else {
+	            return Color.BLACK;
+	        }
 		}
 
 		@Override

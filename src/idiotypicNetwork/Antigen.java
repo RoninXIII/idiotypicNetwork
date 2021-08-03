@@ -94,13 +94,18 @@ public class Antigen {
 			
 			for (Antibody object : antibodies) {
 				
-				if (object.type == "killer") {
+				if (object.type.equalsIgnoreCase("killer") && object.id == this.id) {
 					killers++;
 				}
 			}
-			Context<Object> context = ContextUtils.getContext(this);
-			context.remove(this);
-			return true;
+			
+			if(killers > 1) {
+				
+				Context<Object> context = ContextUtils.getContext(this);
+				context.remove(this);
+				return true;
+			}else return false;
+			
 		
 		}else {
 	
@@ -114,7 +119,7 @@ public class Antigen {
 	public Antibody getAntibody(List<Object> list) {
 		Antibody b = (Antibody)list.get(0);
 		
-		if (b.type == "killer") {
+		if (b.type.equalsIgnoreCase("killer")) {
 			return b;
 		}else return null;
 	

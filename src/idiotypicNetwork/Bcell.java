@@ -95,21 +95,17 @@ public class Bcell {
 				this.releaseAntiBodies(gridCells);
 			}
 
-		} else if (this.lookForApc(gridCells)) {
-
-			Antigen antigen = this.getAntigenFromApc(gridCells);
-
-			if (antigen != null) {
-				this.antigenId = antigen.id;
-				this.type = typeList[1];
-			}
-
+		}else if(this.lookForAntigen(gridCells) && this.type == "naive") {
+			Antigen antigen =  this.getAntigen(gridCells);
+			this.type = typeList[1];
+			this.antigenId = antigen.id;
+	
 		} else if (this.lookForTcell(gridCells)) {
 			Tcell tcell = this.getTcell(gridCells);
 			
-			if (tcell.type == "helper") {
-				this.cloneCell(gridCells);
-				tcell.bcells++;
+			if (tcell.type == "helper" && tcell.type2 == "activated" && tcell.antigenId == this.antigenId) {
+				this.type = typeList[1];
+				this.releaseMoreAntibodies(gridCells);
 			}else {
 				
 				
@@ -135,6 +131,22 @@ public class Bcell {
 
 		}
 
+	}
+
+	private void releaseMoreAntibodies(List<GridCell<Object>> gridCells) {
+		Context<Object> context = ContextUtils.getContext(this);
+
+		for (GridCell<Object> gridCell : gridCells) {
+
+			if (gridCell.size() == 0) {
+				GridPoint pt = gridCell.getPoint();
+				Antibody ab = new Antibody(grid, this.id, "killer");
+				context.add(ab);
+				grid.moveTo(ab, pt.getX(), pt.getY());
+			
+			}
+		}
+		
 	}
 
 	private Tcell getTcell(List<GridCell<Object>> gridCells) {
@@ -170,26 +182,7 @@ public class Bcell {
 		return null;
 	}
 
-	private Antigen getAntigenFromApc(List<GridCell<Object>> gridCells) {
 
-		for (GridCell<Object> gridCell : gridCells) {
-
-			if (gridCell.size() != 0 && gridCell.items().toString().contains("AntigenPresentingCell")) {
-				List<Object> list = (List<Object>) gridCell.items();
-
-				AntigenPresentingCell apc = (AntigenPresentingCell) list.get(0);
-
-				if (apc.antigensToPresent.size() != 0) {
-					Antigen antigen = apc.antigensToPresent.get(0);
-					apc.antigensToPresent.remove(0);
-					return antigen;
-				} else
-					return null;
-			}
-		}
-
-		return null;
-	}
 
 	public boolean lookForAntigen(List<GridCell<Object>> gridCells) {
 
@@ -204,19 +197,7 @@ public class Bcell {
 		return false;
 	}
 
-	public boolean lookForApc(List<GridCell<Object>> gridCells) {
-
-		for (GridCell<Object> gridCell : gridCells) {
-
-			if (gridCell.size() != 0 && gridCell.items().toString().contains("AntigenPresentingCell")) {
-
-				return true;
-			}
-		}
-
-		return false;
-
-	}
+	
 
 	public boolean lookForTcell(List<GridCell<Object>> gridCells) {
 
@@ -292,16 +273,18 @@ public class Bcell {
 	 */
 
 	public void releaseAntiBodies(List<GridCell<Object>> gridCells) {
-
+		
+		int releasedAntibodies = 0;
 		Context<Object> context = ContextUtils.getContext(this);
 
 		for (GridCell<Object> gridCell : gridCells) {
 
-			if (gridCell.size() == 0) {
+			if (gridCell.size() == 0 && releasedAntibodies < 2) {
 				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(grid, this.id, "killer");
+				Antibody ab = new Antibody(grid, this.antigenId, "killer");
 				context.add(ab);
 				grid.moveTo(ab, pt.getX(), pt.getY());
+				releasedAntibodies++;
 			}
 		}
 
