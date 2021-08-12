@@ -77,18 +77,20 @@ public class Tcell {
 		
 		  }else if ( this.type == "suppressor") {
 			
+			  int killedAntibodies = 0;
 			  for (GridCell<Object> gridCell : gridCells) {
 					
 					
 					if (gridCell.size() != 0 &&  gridCell.items().toString().contains("Antibody")) {
 						Antibody antibody =  this.getAntibody((List<Object>)gridCell.items());
 						
-						if(antibodiesToKill.contains(antibody.id)) {
+						if(antibodiesToKill.contains(antibody.id) && killedAntibodies < 2) {
 							
 							
 							Context<Object> context = ContextUtils.getContext(this);
 							
 							context.remove(antibody);
+							killedAntibodies++;
 			
 						}
 						
