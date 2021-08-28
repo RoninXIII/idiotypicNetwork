@@ -46,10 +46,11 @@ public class Bcell {
 	public static ArrayList<Object> cellsToRemove = new ArrayList<Object>();
 	public static ArrayList<GridCell<Bcell>> cellsToAdd = new ArrayList<GridCell<Bcell>>();
 
-	public Bcell(Grid<Object> grid, String type, int id) {
+	public Bcell(ContinuousSpace<Object> space, Grid<Object> grid, String type, int id) {
 		super();
 
 		this.grid = grid;
+		this.space = space;
 		this.type = type;
 		this.id = id;
 	}
@@ -95,22 +96,23 @@ public class Bcell {
 				this.releaseAntiBodies(gridCells);
 			}
 
-		}else if(this.lookForAntigen(gridCells) && this.type == "naive") {
-			Antigen antigen =  this.getAntigen(gridCells);
+		} else if (this.lookForAntigen(gridCells) && this.type == "naive") {
+			Antigen antigen = this.getAntigen(gridCells);
 			this.type = typeList[1];
 			this.antigenId = antigen.id;
-	
+
 		} else if (this.lookForTcell(gridCells)) {
-			Tcell tcell = this.getTcell(gridCells);
-			
-			if (tcell.type == "helper" && tcell.type2 == "activated" && tcell.antigenId == this.antigenId) {
-				this.type = typeList[1];
-				this.releaseMoreAntibodies(gridCells);
-			}else {
-				
-				
+			List<Tcell> tcells = this.getTcells(gridCells);
+
+			for (Tcell tcell : tcells) {
+				if (tcell.type == "helper" && tcell.type2 == "activated" && tcell.antigenId == this.antigenId) {
+					this.type = typeList[1];
+					this.releaseMoreAntibodies(gridCells);
+					return;
+				} else {
+
+				}
 			}
-			
 			
 
 		} else {
@@ -140,49 +142,58 @@ public class Bcell {
 
 			if (gridCell.size() == 0) {
 				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(grid, this.id, "killer");
+				Antibody ab = new Antibody(space, grid, this.id);
 				context.add(ab);
 				grid.moveTo(ab, pt.getX(), pt.getY());
-			
+
 			}
 		}
-		
+
 	}
 
-	private Tcell getTcell(List<GridCell<Object>> gridCells) {
-		
+	private List<Tcell> getTcells(List<GridCell<Object>> gridCells) {
+
+		List<Tcell> tcells = new ArrayList<>();
 		for (GridCell<Object> gridCell : gridCells) {
-
+	
 			if (gridCell.size() != 0 && gridCell.items().toString().contains("Tcell")) {
-				List<Object> list = (List<Object>) gridCell.items();
+			
 
-				Tcell tcell = (Tcell) list.get(0);
+				for (Object obj : gridCell.items()) {
+					if (obj instanceof Tcell) {
+						
+						tcells.add((Tcell) obj);
+					}
+				}
+			
 
-				return tcell;
+				
 			}
 		}
 
-		return null;
+		return tcells ;
 	}
 
 	private Antigen getAntigen(List<GridCell<Object>> gridCells) {
 
 		for (GridCell<Object> gridCell : gridCells) {
 
-			if (gridCell.size() != 0 && gridCell.items().toString().contains("Antigen") && gridCell.size() != 0
+			if (gridCell.size() != 0 && gridCell.items().toString().contains("Antigen")
 					&& !gridCell.items().toString().contains("AntigenPresentingCell")) {
-				List<Object> list = (List<Object>) gridCell.items();
 
-				Antigen antigen = (Antigen) list.get(0);
+				for (Object obj : gridCell.items()) {
+					if (obj instanceof Antigen) {
+						Antigen antigen = (Antigen) obj;
+						return antigen;
+					}
 
-				return antigen;
+				}
+
 			}
 		}
 
 		return null;
 	}
-
-
 
 	public boolean lookForAntigen(List<GridCell<Object>> gridCells) {
 
@@ -196,8 +207,6 @@ public class Bcell {
 
 		return false;
 	}
-
-	
 
 	public boolean lookForTcell(List<GridCell<Object>> gridCells) {
 
@@ -220,7 +229,7 @@ public class Bcell {
 			if (gridCell.size() == 0) {
 				Context<Object> context = ContextUtils.getContext(this);
 				GridPoint pt = gridCell.getPoint();
-				Bcell newCell = new Bcell(grid, "naive", this.id);
+				Bcell newCell = new Bcell(space, grid, "naive", this.id);
 				context.add(newCell);
 				grid.moveTo(newCell, pt.getX(), pt.getY());
 				return true;
@@ -234,9 +243,13 @@ public class Bcell {
 	public void moveTowards(GridPoint pt) {
 
 		if (!pt.equals(grid.getLocation(this))) {
-
-			grid.moveTo(this, pt.getX(), pt.getY());
-
+			NdPoint myPoint = space.getLocation(this);
+			NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY());
+			double angle = SpatialMath.calcAngleFor2DMovement(space, myPoint, otherPoint);
+			space.moveByVector(this, 1, angle, 0);
+			myPoint = space.getLocation(this);
+			grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
+			// moved = true;
 		}
 
 	}
@@ -273,7 +286,7 @@ public class Bcell {
 	 */
 
 	public void releaseAntiBodies(List<GridCell<Object>> gridCells) {
-		
+
 		int releasedAntibodies = 0;
 		Context<Object> context = ContextUtils.getContext(this);
 
@@ -281,7 +294,7 @@ public class Bcell {
 
 			if (gridCell.size() == 0 && releasedAntibodies < 2) {
 				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(grid, this.antigenId, "killer");
+				Antibody ab = new Antibody(space, grid, this.antigenId);
 				context.add(ab);
 				grid.moveTo(ab, pt.getX(), pt.getY());
 				releasedAntibodies++;

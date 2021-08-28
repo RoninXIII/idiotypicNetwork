@@ -11,6 +11,9 @@ import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
+import repast.simphony.space.SpatialMath;
+import repast.simphony.space.continuous.ContinuousSpace;
+import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.SimUtilities;
@@ -23,19 +26,17 @@ public class Antibody {
 
 	private Grid<Object> grid;
 	protected int id;
-	protected String type = "";
-	private String[] typeList = {"killer","memoryKeeper"};
-	
-	
-	public Antibody(Grid<Object> grid, int id, String type) {
+	//protected String type = "";
+	//private String[] typeList = { "killer", "memoryKeeper" };
+	private ContinuousSpace<Object> space;
+
+	public Antibody(ContinuousSpace<Object> space, Grid<Object> grid, int id) {
 		super();
 		this.grid = grid;
-		this.id = id;
-		this.type = type;
+		this.id = id;	
+		this.space = space;
 	}
-	
-	
-	
+
 	@ScheduledMethod(start = 1, interval = 1)
 	public void step() {
 
@@ -48,56 +49,55 @@ public class Antibody {
 
 		// import repast . simphony . query . space . grid . GridCell
 		List<GridCell<Object>> gridCells = nghCreator.getNeighborhood(false);
-		
+
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-		
+
 		GridPoint freeCell = null;
-		
-	
-			
-		
+
 		for (GridCell<Object> gridCell : gridCells) {
-			
-			
+
 			if (gridCell.size() == 0) {
 				freeCell = gridCell.getPoint();
-				
+
 			}
-			
+
 		}
-		
+
 		if (freeCell != null) {
-			
+
 			this.moveTowards(freeCell);
-			
+
 		}
-	
 
 	}
-	
-	
-public void moveTowards(GridPoint pt) {
-		
+
+	public void moveTowards(GridPoint pt) {
+
 		if (!pt.equals(grid.getLocation(this))) {
-
- 			grid.moveTo(this, pt.getX(), pt.getY());
-			//moved = true;
+			NdPoint myPoint = space.getLocation(this);
+			NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY());
+			double angle = SpatialMath.calcAngleFor2DMovement(space, myPoint, otherPoint);
+			space.moveByVector(this, 1, angle, 0);
+			myPoint = space.getLocation(this);
+			grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
+			// moved = true;
 		}
-		
+
 	}
-	
-	
-	//This Watch will watch for any changes to a "moved" variable in the Zombies class.
-			//Our query will return true when the Zombie that moved is within the Moore neighborhood (8 surrounding grid cells) of the
-			//Human whose Watch is currently being evaluated.
-	/*		@Watch(watcheeClassName = "idiotypicNetwork.Bcell",watcheeFieldNames = "moved",query = "within_moore 1", whenToTrigger = WatcherTriggerSchedule.IMMEDIATE)
-			public void run() {
-				
-				
-	
-			}*/
-	
-	
-	
-	
+
+	// This Watch will watch for any changes to a "moved" variable in the Zombies
+	// class.
+	// Our query will return true when the Zombie that moved is within the Moore
+	// neighborhood (8 surrounding grid cells) of the
+	// Human whose Watch is currently being evaluated.
+	/*
+	 * @Watch(watcheeClassName = "idiotypicNetwork.Bcell",watcheeFieldNames =
+	 * "moved",query = "within_moore 1", whenToTrigger =
+	 * WatcherTriggerSchedule.IMMEDIATE) public void run() {
+	 * 
+	 * 
+	 * 
+	 * }
+	 */
+
 }

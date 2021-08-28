@@ -49,7 +49,6 @@ public class idiotypicNetworkStyleAntibody  extends DefaultStyleOGL2D {
 	        if (object instanceof Antibody) {
 	        	
 	        	a = (Antibody) object;
-	        	a.type = "Killer";
 	           return Color.RED;
 	            
 	        } else {

@@ -1,5 +1,5 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor simphonyVersion="2.8.0">
-  <name>Space Display</name>
+  <name>Grid Display</name>
   <type>2D</type>
   <styles>
     <entry>
@@ -58,7 +58,7 @@
     <hashCode>1422072523</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
-  <layoutProjection>space</layoutProjection>
+  <layoutProjection>grid</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
@@ -84,9 +84,9 @@
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>
-      <id>space</id>
+      <id>grid</id>
       <attributes/>
-      <type>continuous space</type>
+      <type>grid</type>
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
@@ -94,12 +94,12 @@
   </visualizationProperties>
   <projectionDescriptors>
     <entry>
-      <string>space</string>
-      <repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
+      <string>grid</string>
+      <repast.simphony.visualization.grid.GridProjectionDescriptor>
         <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData"/>
         <props>
           <entry>
-            <string>repast.simphony.visualization.continuous.ContinuousDecorator</string>
+            <string>repast.simphony.visualization.grid.GridDecorator</string>
             <map>
               <entry>
                 <string>COLOR</string>
@@ -116,7 +116,7 @@
             </map>
           </entry>
         </props>
-      </repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
+      </repast.simphony.visualization.grid.GridProjectionDescriptor>
     </entry>
   </projectionDescriptors>
   <props/>
