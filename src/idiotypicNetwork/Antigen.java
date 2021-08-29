@@ -24,6 +24,7 @@ import repast.simphony.util.SimUtilities;
  * @author mario
  *
  */
+
 public class Antigen {
 
 	private ContinuousSpace<Object> space;
@@ -93,7 +94,7 @@ public class Antigen {
 
 			for (Antibody object : antibodies) {
 
-				if (object.id == this.id) {
+				if (object.antigenId == this.id) {
 					killers++;
 				}
 			}

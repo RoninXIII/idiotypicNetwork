@@ -23,6 +23,7 @@ public class idiotypicNetworkStyleBcell extends DefaultStyleOGL2D {
 	    public VSpatial getVSpatial(Object agent, VSpatial spatial) {
 	        if (spatial == null) {
 	            spatial = shapeFactory.createShape(markFac.getMark("triangle"), true);
+	           
 	        }
 	        return spatial;
 	    }

@@ -49,8 +49,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 		String[] typeList = { "helper", "suppressor" };
 
 		Bcell cell = new Bcell(null,null, "naive", 0);
-		cell.agentsCardinality = bCellCount;
-		cell.agentsToCheck = cell.agentsCardinality;
+
 
 		// add B cells
 		for (int i = 0; i < bCellCount; i++) {

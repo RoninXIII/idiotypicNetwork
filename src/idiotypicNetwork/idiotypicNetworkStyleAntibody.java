@@ -64,7 +64,7 @@ public class idiotypicNetworkStyleAntibody  extends DefaultStyleOGL2D {
 	      	   
 	  	 	    	if(object instanceof Antibody) {
 	  	 	    		a = (Antibody) object;
-	  	 		        return "An"+a.id;
+	  	 		        return "Ab"+a.id+"-An"+a.antigenId;
 	  	 	        } else {
 	  	 	            return "";
 	  	 	        }

@@ -16,6 +16,7 @@ import repast.simphony.parameter.Parameters;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
+import repast.simphony.relogo.ide.dynamics.NetLogoSystemDynamicsParser.intg_return;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
@@ -35,16 +36,15 @@ public class Bcell {
 	private ContinuousSpace<Object> space;
 	protected int id;
 	protected int antigenId;
-	public static int agentsCardinality = getCardinality();
-	public static int agentsToCheck = agentsCardinality;
+	public static int countAntibodies;
+	//public static int agentsCardinality = getCardinality();
+	//public static int agentsToCheck = agentsCardinality;
 
 	/*
 	 * The Cell will move about the ContinuousSpace and we will simply round the
 	 * ContinuousSpace location to determine the corresponding Grid location
 	 */
 	private Grid<Object> grid;
-	public static ArrayList<Object> cellsToRemove = new ArrayList<Object>();
-	public static ArrayList<GridCell<Bcell>> cellsToAdd = new ArrayList<GridCell<Bcell>>();
 
 	public Bcell(ContinuousSpace<Object> space, Grid<Object> grid, String type, int id) {
 		super();
@@ -142,12 +142,13 @@ public class Bcell {
 
 			if (gridCell.size() == 0) {
 				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(space, grid, this.id);
+				Antibody ab = new Antibody(space, grid,countAntibodies, this.antigenId);
 				context.add(ab);
 				grid.moveTo(ab, pt.getX(), pt.getY());
 
 			}
 		}
+		countAntibodies++;
 
 	}
 
@@ -254,36 +255,7 @@ public class Bcell {
 
 	}
 
-	public boolean isAlreadyPresent(GridCell<Bcell> gridCell) {
 
-		for (GridCell<Bcell> gridCell2 : cellsToAdd) {
-
-			if (gridCell2.getPoint().equals(gridCell.getPoint())) {
-
-				return true;
-			}
-		}
-
-		return false;
-
-	}
-	/*
-	 * 
-	 * /*private void removeCell() {
-	 * 
-	 * for (Object obj : cellsToRemove) { Context<Object> context =
-	 * ContextUtils.getContext(obj); context.remove(obj);
-	 * 
-	 * }
-	 * 
-	 * agentsCardinality = agentsCardinality - cellsToRemove.size();
-	 * 
-	 * if (agentsCardinality == 0) { agentsCardinality = getCardinality(); }
-	 * 
-	 * cellsToRemove.clear();
-	 * 
-	 * }
-	 */
 
 	public void releaseAntiBodies(List<GridCell<Object>> gridCells) {
 
@@ -294,12 +266,13 @@ public class Bcell {
 
 			if (gridCell.size() == 0 && releasedAntibodies < 2) {
 				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(space, grid, this.antigenId);
+				Antibody ab = new Antibody(space, grid, countAntibodies,this.antigenId);
 				context.add(ab);
 				grid.moveTo(ab, pt.getX(), pt.getY());
 				releasedAntibodies++;
 			}
 		}
+		countAntibodies++;
 
 	}
 
@@ -316,17 +289,7 @@ public class Bcell {
 		List<GridCell<Bcell>> gridCells = nghCreator.getNeighborhood(true);
 
 		return gridCells;
-		/*
-		 * int numberOfNeighbors = this.checkLiveness(gridCells); if(numberOfNeighbors
-		 * == 3) {
-		 * 
-		 * 
-		 * 
-		 * Bcell newCell = new Bcell(grid, true); Context <Object> context =
-		 * ContextUtils.getContext(cell); context .add (newCell);
-		 * 
-		 * grid.moveTo (newCell, pt. getX (), pt. getY ()); }
-		 */
+
 
 	}
 

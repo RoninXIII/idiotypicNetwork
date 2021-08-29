@@ -11,6 +11,7 @@ import repast.simphony.engine.watcher.WatcherTriggerSchedule;
 import repast.simphony.query.space.grid.GridCell;
 import repast.simphony.query.space.grid.GridCellNgh;
 import repast.simphony.random.RandomHelper;
+import repast.simphony.relogo.ide.dynamics.NetLogoSystemDynamicsParser.intg_return;
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
@@ -26,14 +27,17 @@ public class Antibody {
 
 	private Grid<Object> grid;
 	protected int id;
+	protected int antigenId;
+	//protected int concentration;
 	//protected String type = "";
 	//private String[] typeList = { "killer", "memoryKeeper" };
 	private ContinuousSpace<Object> space;
 
-	public Antibody(ContinuousSpace<Object> space, Grid<Object> grid, int id) {
+	public Antibody(ContinuousSpace<Object> space, Grid<Object> grid, int id,int antigenId) {
 		super();
 		this.grid = grid;
-		this.id = id;	
+		this.id = id;
+		this.antigenId = antigenId;	
 		this.space = space;
 	}
 
@@ -85,19 +89,6 @@ public class Antibody {
 
 	}
 
-	// This Watch will watch for any changes to a "moved" variable in the Zombies
-	// class.
-	// Our query will return true when the Zombie that moved is within the Moore
-	// neighborhood (8 surrounding grid cells) of the
-	// Human whose Watch is currently being evaluated.
-	/*
-	 * @Watch(watcheeClassName = "idiotypicNetwork.Bcell",watcheeFieldNames =
-	 * "moved",query = "within_moore 1", whenToTrigger =
-	 * WatcherTriggerSchedule.IMMEDIATE) public void run() {
-	 * 
-	 * 
-	 * 
-	 * }
-	 */
+
 
 }
