@@ -101,7 +101,7 @@ public class Antigen {
 
 			if (killers > 1) {
 
-				Tcell tcell = new Tcell(space, grid, "", 0, "");
+				Tcell tcell = new Tcell(space, grid, "", "");
 				tcell.antibodiesToKill.add(this.id);
 				Context<Object> context = ContextUtils.getContext(this);
 				context.remove(this);

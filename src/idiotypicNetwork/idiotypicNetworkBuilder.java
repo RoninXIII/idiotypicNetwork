@@ -3,6 +3,7 @@ package idiotypicNetwork;
 import java.util.ArrayList;
 import java.util.concurrent.ThreadLocalRandom;
 
+
 import repast.simphony.context.Context;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactory;
 import repast.simphony.context.space.continuous.ContinuousSpaceFactoryFinder;
@@ -51,6 +52,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 		Bcell cell = new Bcell(null,null, "naive", 0);
 
 
+
 		// add B cells
 		for (int i = 0; i < bCellCount; i++) {
 			// Bcell(grid,"naive or activated", id)
@@ -60,9 +62,9 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 		// add T cells
 		for (int j = 0; j < tCellCount; j++) {
 			if (j % 2 == 0) {
-				context.add(new Tcell(space, grid, typeList[0], bCellCount, "naive"));
+				context.add(new Tcell(space, grid, typeList[0], "naive"));
 			} else {
-				context.add(new Tcell(space, grid, typeList[1], bCellCount, "naive"));
+				context.add(new Tcell(space, grid, typeList[1], "naive"));
 			}
 
 		}

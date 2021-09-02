@@ -59,7 +59,7 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	 	        	
 	 	        	if (t.type2 == "activated") {
 						
-	 	        		return "Th-"+t.antigenId;
+	 	        		return "Th-An"+t.antigenId;
 					}else return "T";
 	 	        } else {
 	 	            return "";

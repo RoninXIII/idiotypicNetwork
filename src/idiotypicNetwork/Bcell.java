@@ -37,8 +37,6 @@ public class Bcell {
 	protected int id;
 	protected int antigenId;
 	public static int countAntibodies;
-	//public static int agentsCardinality = getCardinality();
-	//public static int agentsToCheck = agentsCardinality;
 
 	/*
 	 * The Cell will move about the ContinuousSpace and we will simply round the
@@ -53,13 +51,6 @@ public class Bcell {
 		this.space = space;
 		this.type = type;
 		this.id = id;
-	}
-
-	private static int getCardinality() {
-
-		Parameters params = RunEnvironment.getInstance().getParameters();
-		int cellCount = params.getInteger("cell_count");
-		return cellCount;
 	}
 
 	@ScheduledMethod(start = 1, interval = 1)
@@ -113,7 +104,6 @@ public class Bcell {
 
 				}
 			}
-			
 
 		} else {
 
@@ -132,7 +122,6 @@ public class Bcell {
 			this.moveTowards(freeCell);
 
 		}
-
 	}
 
 	private void releaseMoreAntibodies(List<GridCell<Object>> gridCells) {
@@ -142,13 +131,13 @@ public class Bcell {
 
 			if (gridCell.size() == 0) {
 				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(space, grid,countAntibodies, this.antigenId);
+				Antibody ab = new Antibody(space, grid, id, this.antigenId);
 				context.add(ab);
 				grid.moveTo(ab, pt.getX(), pt.getY());
 
 			}
 		}
-		countAntibodies++;
+		// countAntibodies++;
 
 	}
 
@@ -156,23 +145,20 @@ public class Bcell {
 
 		List<Tcell> tcells = new ArrayList<>();
 		for (GridCell<Object> gridCell : gridCells) {
-	
+
 			if (gridCell.size() != 0 && gridCell.items().toString().contains("Tcell")) {
-			
 
 				for (Object obj : gridCell.items()) {
 					if (obj instanceof Tcell) {
-						
+
 						tcells.add((Tcell) obj);
 					}
 				}
-			
 
-				
 			}
 		}
 
-		return tcells ;
+		return tcells;
 	}
 
 	private Antigen getAntigen(List<GridCell<Object>> gridCells) {
@@ -255,8 +241,6 @@ public class Bcell {
 
 	}
 
-
-
 	public void releaseAntiBodies(List<GridCell<Object>> gridCells) {
 
 		int releasedAntibodies = 0;
@@ -266,13 +250,13 @@ public class Bcell {
 
 			if (gridCell.size() == 0 && releasedAntibodies < 2) {
 				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(space, grid, countAntibodies,this.antigenId);
+				Antibody ab = new Antibody(space, grid, id, this.antigenId);
 				context.add(ab);
 				grid.moveTo(ab, pt.getX(), pt.getY());
 				releasedAntibodies++;
 			}
 		}
-		countAntibodies++;
+		// countAntibodies++;
 
 	}
 
@@ -289,7 +273,6 @@ public class Bcell {
 		List<GridCell<Bcell>> gridCells = nghCreator.getNeighborhood(true);
 
 		return gridCells;
-
 
 	}
 

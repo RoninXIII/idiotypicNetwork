@@ -32,24 +32,21 @@ public class Tcell {
 	private String[] typeList = { "helper", "suppressor", "naive", "activated" };
 	protected String type2 = "";
 	protected int antigenId = 0;
-	protected static int bcells = getBcells();
 	protected static List<Integer> antibodiesToKill = new ArrayList<>();
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
 
-	public Tcell(ContinuousSpace<Object> space, Grid<Object> grid, String type, int bcells, String type2) {
+	public Tcell(ContinuousSpace<Object> space, Grid<Object> grid, String type, String type2) {
 		super();
 
 		this.grid = grid;
 		this.space = space;
 		this.type = type;
-		this.bcells = bcells;
 		this.type2 = type2;
 	}
 
 	@ScheduledMethod(start = 1, interval = 1)
 	public void step() {
-		bcells = this.getBcells();
 
 		// get the grid location of this Cell
 		GridPoint pt = grid.getLocation(this);
@@ -181,12 +178,6 @@ public class Tcell {
 
 		return false;
 
-	}
-
-	private static int getBcells() {
-		Parameters params = RunEnvironment.getInstance().getParameters();
-		int cellCount = params.getInteger("cell_count");
-		return cellCount;
 	}
 
 	public void moveTowards(GridPoint pt) {

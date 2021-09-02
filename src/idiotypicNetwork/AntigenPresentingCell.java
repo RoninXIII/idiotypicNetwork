@@ -59,17 +59,14 @@ public class AntigenPresentingCell {
 				List<Antigen> antigens = this.getAntigens((List<Object>) gridCell.items());
 				antigensToPresent.addAll(antigens);
 			}
-
-		}
-
-		for (GridCell<Object> gridCell : gridCells) {
-
+			
 			if (gridCell.size() == 0) {
 
 				freeCell = gridCell.getPoint();
 			}
 
 		}
+
 
 		if (freeCell != null) {
 
