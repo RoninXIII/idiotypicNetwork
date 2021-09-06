@@ -20,6 +20,7 @@ import repast.simphony.relogo.ide.dynamics.NetLogoSystemDynamicsParser.intg_retu
 import repast.simphony.space.SpatialMath;
 import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
+import repast.simphony.space.graph.Network;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
 import repast.simphony.util.ContextUtils;
@@ -126,18 +127,21 @@ public class Bcell {
 
 	private void releaseMoreAntibodies(List<GridCell<Object>> gridCells) {
 		Context<Object> context = ContextUtils.getContext(this);
-
+		Network < Object > net = (Network<Object>) context.getProjection("antibodies network");
 		for (GridCell<Object> gridCell : gridCells) {
 
 			if (gridCell.size() == 0) {
 				GridPoint pt = gridCell.getPoint();
 				Antibody ab = new Antibody(space, grid, id, this.antigenId);
 				context.add(ab);
+				net.addEdge ( this , ab );
 				grid.moveTo(ab, pt.getX(), pt.getY());
 
 			}
 		}
 		// countAntibodies++;
+		
+		
 
 	}
 

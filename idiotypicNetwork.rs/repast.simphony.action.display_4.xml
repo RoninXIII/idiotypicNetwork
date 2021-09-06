@@ -45,8 +45,18 @@
       <null/>
     </entry>
   </editedStyles>
-  <netStyles/>
-  <editedNetStyles/>
+  <netStyles>
+    <entry>
+      <string>antibodies network</string>
+      <string>repast.simphony.visualization.editedStyle.EditedEdgeStyle2D</string>
+    </entry>
+  </netStyles>
+  <editedNetStyles>
+    <entry>
+      <string>antibodies network</string>
+      <string>antibodiesnetwork.style_1.xml</string>
+    </entry>
+  </editedNetStyles>
   <frequency>ON_MOVE</frequency>
   <schedParams>
     <start>1.0</start>
@@ -55,7 +65,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-682516038</hashCode>
+    <hashCode>761506161</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -63,11 +73,11 @@
   <layerOrder>
     <entry>
       <string>idiotypicNetwork.AntigenPresentingCell</string>
-      <int>2</int>
+      <int>4</int>
     </entry>
     <entry>
       <string>idiotypicNetwork.Antigen</string>
-      <int>4</int>
+      <int>3</int>
     </entry>
     <entry>
       <string>idiotypicNetwork.Bcell</string>
@@ -79,7 +89,7 @@
     </entry>
     <entry>
       <string>idiotypicNetwork.Antibody</string>
-      <int>3</int>
+      <int>2</int>
     </entry>
   </layerOrder>
   <projections>
@@ -88,11 +98,23 @@
       <attributes/>
       <type>continuous space</type>
     </repast.simphony.scenario.data.ProjectionData>
+    <repast.simphony.scenario.data.ProjectionData>
+      <id>antibodies network</id>
+      <attributes/>
+      <type>network</type>
+    </repast.simphony.scenario.data.ProjectionData>
   </projections>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
     <unitSize>20.0</unitSize>
   </visualizationProperties>
   <projectionDescriptors>
+    <entry>
+      <string>antibodies network</string>
+      <repast.simphony.visualization.engine.DefaultProjectionDescriptor>
+        <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData[2]"/>
+        <props/>
+      </repast.simphony.visualization.engine.DefaultProjectionDescriptor>
+    </entry>
     <entry>
       <string>space</string>
       <repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
@@ -103,7 +125,7 @@
             <map>
               <entry>
                 <string>COLOR</string>
-                <int>-52429</int>
+                <int>-65536</int>
               </entry>
               <entry>
                 <string>UNIT_SIZE</string>

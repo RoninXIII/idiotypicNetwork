@@ -27,9 +27,13 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 
 	@Override
 	public Context build(Context<Object> context) {
+		 NetworkBuilder < Object > netBuilder = new NetworkBuilder < Object > ("antibodies network", context , true );
+		 netBuilder.buildNetwork ();
+		 
 		context.setId("idiotypicNetwork");
 
-		int x = 30, y = 30;
+	
+		int x = 20, y = 20;
 		 ContinuousSpaceFactory spaceFactory =
 		 ContinuousSpaceFactoryFinder.createContinuousSpaceFactory ( null );
 		 ContinuousSpace <Object > space = spaceFactory.createContinuousSpace("space",
@@ -40,6 +44,8 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 		// Correct import : import repast . simphony . space . grid . WrapAroundBorders;
 		Grid<Object> grid = gridFactory.createGrid("grid", context,
 				new GridBuilderParameters<Object>(new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, x, y));
+
+		
 
 		Parameters params = RunEnvironment.getInstance().getParameters();
 		int bCellCount = params.getInteger("cell_count");

@@ -6,7 +6,7 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
 				<parameter name="Tcell_count" displayName="T-cell count" type="int" 
-						defaultValue="7" 
+						defaultValue="3" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
@@ -21,7 +21,7 @@
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>
 				<parameter name="cell_count" displayName="Cell Count" type="int" 
-						defaultValue="15" 
+						defaultValue="6" 
 						isReadOnly="false" 
 						converter="repast.simphony.parameter.StringConverterFactory$IntConverter"
 											/>

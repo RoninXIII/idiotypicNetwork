@@ -5,6 +5,11 @@ package idiotypicNetwork;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import saf.v3d.scene.Position;
 
@@ -20,26 +25,40 @@ import saf.v3d.scene.VSpatial;
 public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	
 	
+	private BufferedImage img = null; 
+	private BufferedImage img2 = null;
 
-	
-	 private static SimpleMarkFactory markFac = new SimpleMarkFactory();
 
-	    @Override
-	    public void init(ShapeFactory2D factory) {
-	        super.init(factory);
-	    }
+    @Override
+    public void init(ShapeFactory2D factory) {
+        super.init(factory);
+    }
 
-	    @Override
-	    public VSpatial getVSpatial(Object agent, VSpatial spatial) {
-	        if (spatial == null) {
-	  
-	        	
-	            spatial = shapeFactory.createShape(markFac.getMark("circle"), true);
-	            
-	        
-	        }
-	        return spatial;
-	    }
+    @Override
+    public VSpatial getVSpatial(Object agent, VSpatial spatial) {
+    	
+    	if (agent instanceof Tcell) {
+			Tcell tcell = (Tcell) agent;
+			
+			try {
+	    	    img = ImageIO.read(new File("C:\\Users\\Mario\\eclipse-workspace-repast\\idiotypicNetwork\\idiotypicNetwork\\icons\\tcell.png"));
+	    	    img2 = ImageIO.read(new File("C:\\Users\\Mario\\eclipse-workspace-repast\\idiotypicNetwork\\idiotypicNetwork\\icons\\tcell2.png"));
+	    	} catch (IOException e) {
+	    		
+	    	}
+	        if (spatial == null && tcell.type2 == "naive") {
+	            spatial = shapeFactory.createImage("t", img2);
+	           
+	        }else if (spatial != null && tcell.type2 == "activated") {
+	        	spatial = shapeFactory.createImage("t2", img);
+			}
+		} else {
+			
+		
+		}
+    
+        return spatial;
+    }
 
 	    
 	    
@@ -60,7 +79,7 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	 	        	if (t.type2 == "activated") {
 						
 	 	        		return "Th-An"+t.antigenId;
-					}else return "T";
+					}else return "T "+t.type;
 	 	        } else {
 	 	            return "";
 	 	        }
@@ -72,7 +91,7 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	    @Override
 		public Color getBorderColor(Object object) {
 		
-     Tcell t;
+	    	Tcell t;
 	        
 	        if(object instanceof Tcell) {
 	        	
@@ -150,6 +169,6 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 
 	    @Override
 	    public float getScale(Object object) {
-	        return 20;
+	        return 0.35f;
 	    }
 }
