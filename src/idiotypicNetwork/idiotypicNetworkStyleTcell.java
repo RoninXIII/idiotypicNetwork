@@ -11,6 +11,7 @@ import java.io.IOException;
 
 import javax.imageio.ImageIO;
 
+import jogamp.graph.font.typecast.t2.T2Interpreter;
 import saf.v3d.scene.Position;
 
 import repast.simphony.gis.styleEditor.SimpleMarkFactory;
@@ -52,9 +53,6 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	        }else if (spatial != null && tcell.type2 == "activated") {
 	        	spatial = shapeFactory.createImage("t2", img);
 			}
-		} else {
-			
-		
 		}
     
         return spatial;
@@ -76,7 +74,7 @@ public class idiotypicNetworkStyleTcell extends DefaultStyleOGL2D {
 	 	        	
 	 	        	t = (Tcell) object;
 	 	        	
-	 	        	if (t.type2 == "activated") {
+	 	        	if (t.type == "helper" && t.type2 == "activated") {
 						
 	 	        		return "Th-An"+t.antigenId;
 					}else return "T "+t.type;

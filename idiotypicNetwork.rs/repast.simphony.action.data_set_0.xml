@@ -11,7 +11,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>986102295</hashCode>
+    <hashCode>1292606352</hashCode>
   </scheduleParams>
   <atEnd>false</atEnd>
   <methodDataSources class="linked-hash-map"/>
@@ -28,6 +28,13 @@
       <repast.simphony.data2.engine.CountSourceDefinition>
         <typeName>idiotypicNetwork.Antigen</typeName>
         <id>Antigens Count</id>
+      </repast.simphony.data2.engine.CountSourceDefinition>
+    </entry>
+    <entry>
+      <string>Clones Count</string>
+      <repast.simphony.data2.engine.CountSourceDefinition>
+        <typeName>idiotypicNetwork.MemoryKeeperCell</typeName>
+        <id>Clones Count</id>
       </repast.simphony.data2.engine.CountSourceDefinition>
     </entry>
   </countSources>

@@ -1,5 +1,5 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor simphonyVersion="2.8.0">
-  <name>Grid Display</name>
+  <name>Space Display</name>
   <type>2D</type>
   <styles>
     <entry>
@@ -19,8 +19,16 @@
       <string>idiotypicNetwork.idiotypicNetworkStyleTcell</string>
     </entry>
     <entry>
+      <string>idiotypicNetwork.Blood</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
+    </entry>
+    <entry>
       <string>idiotypicNetwork.Antibody</string>
       <string>idiotypicNetwork.idiotypicNetworkStyleAntibody</string>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.MemoryKeeperCell</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleMemoryKeeper</string>
     </entry>
   </styles>
   <editedStyles>
@@ -41,12 +49,30 @@
       <null/>
     </entry>
     <entry>
+      <string>idiotypicNetwork.Blood</string>
+      <string>idiotypicNetwork.Blood.style_3.xml</string>
+    </entry>
+    <entry>
       <string>idiotypicNetwork.Antibody</string>
       <null/>
     </entry>
+    <entry>
+      <string>idiotypicNetwork.MemoryKeeperCell</string>
+      <null/>
+    </entry>
   </editedStyles>
-  <netStyles/>
-  <editedNetStyles/>
+  <netStyles>
+    <entry>
+      <string>antibodies network</string>
+      <string>repast.simphony.visualization.editedStyle.EditedEdgeStyle2D</string>
+    </entry>
+  </netStyles>
+  <editedNetStyles>
+    <entry>
+      <string>antibodies network</string>
+      <string>antibodiesnetwork.style_2.xml</string>
+    </entry>
+  </editedNetStyles>
   <frequency>ON_MOVE</frequency>
   <schedParams>
     <start>1.0</start>
@@ -55,38 +81,51 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>761506161</hashCode>
+    <hashCode>1093354479</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
-  <layoutProjection>grid</layoutProjection>
+  <layoutProjection>space</layoutProjection>
   <layoutInterval>0</layoutInterval>
   <layerOrder>
     <entry>
       <string>idiotypicNetwork.AntigenPresentingCell</string>
-      <int>2</int>
+      <int>6</int>
     </entry>
     <entry>
       <string>idiotypicNetwork.Antigen</string>
-      <int>4</int>
+      <int>2</int>
     </entry>
     <entry>
       <string>idiotypicNetwork.Bcell</string>
-      <int>1</int>
+      <int>5</int>
     </entry>
     <entry>
       <string>idiotypicNetwork.Tcell</string>
+      <int>1</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Blood</string>
       <int>0</int>
     </entry>
     <entry>
       <string>idiotypicNetwork.Antibody</string>
       <int>3</int>
     </entry>
+    <entry>
+      <string>idiotypicNetwork.MemoryKeeperCell</string>
+      <int>4</int>
+    </entry>
   </layerOrder>
   <projections>
     <repast.simphony.scenario.data.ProjectionData>
-      <id>grid</id>
+      <id>space</id>
       <attributes/>
-      <type>grid</type>
+      <type>continuous space</type>
+    </repast.simphony.scenario.data.ProjectionData>
+    <repast.simphony.scenario.data.ProjectionData>
+      <id>antibodies network</id>
+      <attributes/>
+      <type>network</type>
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
@@ -94,12 +133,19 @@
   </visualizationProperties>
   <projectionDescriptors>
     <entry>
-      <string>grid</string>
-      <repast.simphony.visualization.grid.GridProjectionDescriptor>
+      <string>antibodies network</string>
+      <repast.simphony.visualization.engine.DefaultProjectionDescriptor>
+        <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData[2]"/>
+        <props/>
+      </repast.simphony.visualization.engine.DefaultProjectionDescriptor>
+    </entry>
+    <entry>
+      <string>space</string>
+      <repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
         <proj reference="../../../../projections/repast.simphony.scenario.data.ProjectionData"/>
         <props>
           <entry>
-            <string>repast.simphony.visualization.grid.GridDecorator</string>
+            <string>repast.simphony.visualization.continuous.ContinuousDecorator</string>
             <map>
               <entry>
                 <string>COLOR</string>
@@ -111,12 +157,12 @@
               </entry>
               <entry>
                 <string>SHOW</string>
-                <boolean>true</boolean>
+                <boolean>false</boolean>
               </entry>
             </map>
           </entry>
         </props>
-      </repast.simphony.visualization.grid.GridProjectionDescriptor>
+      </repast.simphony.visualization.continuous.ContinuousProjectionDescriptor>
     </entry>
   </projectionDescriptors>
   <props/>

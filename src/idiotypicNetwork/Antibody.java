@@ -49,16 +49,16 @@ public class Antibody {
 
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood.
-		GridCellNgh<Object> nghCreator = new GridCellNgh<Object>(grid, pt, Object.class, 1, 1);
+		GridCellNgh<Antigen> nghCreator = new GridCellNgh<Antigen>(grid, pt, Antigen.class, 1, 1);
 
 		// import repast . simphony . query . space . grid . GridCell
-		List<GridCell<Object>> gridCells = nghCreator.getNeighborhood(false);
+		List<GridCell<Antigen>> gridCells = nghCreator.getNeighborhood(false);
 
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
 
 		GridPoint freeCell = null;
 
-		for (GridCell<Object> gridCell : gridCells) {
+		for (GridCell<Antigen> gridCell : gridCells) {
 
 			if (gridCell.size() == 0) {
 				freeCell = gridCell.getPoint();
@@ -72,6 +72,8 @@ public class Antibody {
 			this.moveTowards(freeCell);
 
 		}
+		
+		
 
 	}
 
