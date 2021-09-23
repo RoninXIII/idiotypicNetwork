@@ -3,8 +3,11 @@
  */
 package idiotypicNetwork;
 
+import java.sql.Time;
 import java.util.List;
 
+import repast.simphony.context.Context;
+import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
 import repast.simphony.engine.watcher.Watch;
 import repast.simphony.engine.watcher.WatcherTriggerSchedule;
@@ -17,6 +20,7 @@ import repast.simphony.space.continuous.ContinuousSpace;
 import repast.simphony.space.continuous.NdPoint;
 import repast.simphony.space.grid.Grid;
 import repast.simphony.space.grid.GridPoint;
+import repast.simphony.util.ContextUtils;
 import repast.simphony.util.SimUtilities;
 
 /**
@@ -28,10 +32,12 @@ public class Antibody {
 	private Grid<Object> grid;
 	protected int id;
 	protected int antigenId;
+	protected int lifeSpan = 0;
 	//protected int concentration;
 	//protected String type = "";
 	//private String[] typeList = { "killer", "memoryKeeper" };
 	private ContinuousSpace<Object> space;
+	public static int time;
 
 	public Antibody(ContinuousSpace<Object> space, Grid<Object> grid, int id,int antigenId) {
 		super();
@@ -73,10 +79,24 @@ public class Antibody {
 
 		}
 		
+		lifeSpan++;
 		
+		if (lifeSpan == 400) {
+			die();
+		}
 
 	}
-
+	
+	
+	
+	// After a certain time the antibodies will decay
+	public void die() {
+		
+		
+		Context<Object> context = ContextUtils.getContext(this);
+		context.remove(this);
+		
+	}
 	public void moveTowards(GridPoint pt) {
 
 		if (!pt.equals(grid.getLocation(this))) {

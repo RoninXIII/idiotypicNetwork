@@ -31,7 +31,7 @@ public class Antigen {
 	private Grid<Object> grid;
 	protected int id;
 	protected String color = "";
-
+	protected int lifeSpan = 0;
 	public Antigen(ContinuousSpace<Object> space, Grid<Object> grid, int id) {
 		super();
 
@@ -65,6 +65,12 @@ public class Antigen {
 
 			
 		}
+		
+		lifeSpan++;
+		
+		if (lifeSpan == 150) {
+			cloneAntigen();
+		}
 
 	}
 	
@@ -89,7 +95,7 @@ public class Antigen {
 	
 	
 	
-	@ScheduledMethod(start = 1, interval = 100)
+
 	public void cloneAntigen() {
 		
 		

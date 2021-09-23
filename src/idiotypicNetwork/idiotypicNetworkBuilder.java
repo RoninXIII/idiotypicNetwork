@@ -57,10 +57,10 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 		}
 
 		// add blood cells
-		for (int i = 0; i < (x * y * 3); i++) {
+	/*	for (int i = 0; i < (x * y * 3); i++) {
 			// Bcell(grid,"naive or activated", id)
 			context.add(new Blood(grid, space));
-		}
+		}*/
 
 		// add T cells
 
@@ -70,7 +70,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 		context.add(new Tcell(space, grid, typeList[1], "naive"));
 			
 		
-		} else if (antigenCount > 3 && antigenCount < 10) {
+		} else if (antigenCount > 3 && antigenCount <= 10) {
 			
 			for (int j = 0; j < 3; j++) {
 				if (j % 2 == 0) {

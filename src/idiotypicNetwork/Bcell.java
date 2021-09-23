@@ -8,6 +8,8 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
+import org.jfree.chart.util.DirectionalGradientPaintTransformer;
+
 import com.sun.source.util.TreePathScanner;
 
 import repast.simphony.context.Context;
@@ -85,6 +87,7 @@ public class Bcell {
 
 		SimUtilities.shuffle(antigensGridCells, RandomHelper.getUniform());
 
+		Context<Object> context = ContextUtils.getContext(this);
 		// Aggiungere caso di generazione di anticorpi dopo un certo periodo
 
 		if (this.type == "naive" && this.lookForAntigen()) {
@@ -117,6 +120,15 @@ public class Bcell {
 			}
 
 		}
+		
+		
+		
+		
+		
+		if (context.getObjects(Antigen.class).size() == 0) {
+			die();
+			return;
+		}
 
 		GridPoint pointWithMostAntigens = null;
 		int maxCount = -1;
@@ -130,6 +142,12 @@ public class Bcell {
 	
 		this.moveTowards(pointWithMostAntigens);
 
+	}
+
+	private void die() {
+		Context<Object> context = ContextUtils.getContext(this);
+		context.remove(this);
+		
 	}
 
 	public List<GridCell<Object>> getNeighborhood() {
