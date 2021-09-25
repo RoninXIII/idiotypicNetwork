@@ -1,3 +1,6 @@
+/**
+ * 
+ */
 package idiotypicNetwork;
 
 import java.awt.Color;
@@ -12,28 +15,31 @@ import org.jogamp.java3d.utils.geometry.Primitive;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.image.TextureLoader;
 
-
-
 import repast.simphony.visualization.visualization3D.style.Style3D;
 import repast.simphony.visualization.visualization3D.style.TaggedAppearance;
 import repast.simphony.visualization.visualization3D.style.TaggedBranchGroup;
 
 
-public class idiotypicNetworkStyle3DAntibody implements Style3D<Antibody> {
+/**
+ * @author Mario
+ *
+ */
+public class idiotypicNetworkStyle3DMemoryCell implements Style3D<MemoryKeeperCell>{
 
-	
-Texture texture;
-	
-	public idiotypicNetworkStyle3DAntibody (){
+	Texture texture;
+	public idiotypicNetworkStyle3DMemoryCell () {
+		
 		super();
 		
-		TextureLoader loader = new TextureLoader("icons/antibody3d.jpg", "RGB", new Container());
+		TextureLoader loader = new TextureLoader("icons/moon.jpg", "RGB", new Container());
     texture = loader.getTexture();
     texture.setBoundaryModeS(Texture.WRAP);
     texture.setBoundaryModeT(Texture.WRAP);
+		
 	}
 	
-	public TaggedBranchGroup getBranchGroup(Antibody antibody, TaggedBranchGroup taggedGroup) {
+	@Override
+	public TaggedBranchGroup getBranchGroup(MemoryKeeperCell memoryKeeperCell, TaggedBranchGroup taggedGroup) {
 		if (taggedGroup == null || taggedGroup.getTag() == null) {
 			taggedGroup = new TaggedBranchGroup("DEFAULT");
 						
@@ -60,26 +66,26 @@ Texture texture;
 		return null;
 	}
 
-	public float[] getRotation(Antibody antibody) {
+	public float[] getRotation(MemoryKeeperCell memoryKeeperCell) {
 		return null; 
 	}
-	public String getLabel(Antibody antibody, String currentLabel) {		
+	public String getLabel(MemoryKeeperCell memoryKeeperCell, String currentLabel) {		
 		//return moon.getName();
 		return null;
 	}
-	public Color getLabelColor(Antibody antibody, Color currentColor) {
+	public Color getLabelColor(MemoryKeeperCell memoryKeeperCell, Color currentColor) {
 		return Color.YELLOW;
 	}
-	public Font getLabelFont(Antibody antibody, Font currentFont) {
+	public Font getLabelFont(MemoryKeeperCell memoryKeeperCell, Font currentFont) {
 		return null;
 	}
-	public LabelPosition getLabelPosition(Antibody antibody, LabelPosition curentPosition) {
+	public LabelPosition getLabelPosition(MemoryKeeperCell memoryKeeperCell, LabelPosition curentPosition) {
 		return LabelPosition.NORTH;
 	}
-	public float getLabelOffset(Antibody antibody) {
+	public float getLabelOffset(MemoryKeeperCell memoryKeeperCell) {
 		return .75f;
 	}
-	public TaggedAppearance getAppearance(Antibody antibody, TaggedAppearance taggedAppearance, Object shapeID) {
+	public TaggedAppearance getAppearance(MemoryKeeperCell memoryKeeperCell, TaggedAppearance taggedAppearance, Object shapeID) {
 		
 //		if (taggedAppearance == null) {
 //			taggedAppearance = new TaggedAppearance();
@@ -88,10 +94,7 @@ Texture texture;
 		
 		return taggedAppearance;
 	}
-	public float[] getScale(Antibody antibody) {
+	public float[] getScale(MemoryKeeperCell memoryKeeperCell) {
 		return null;
 	}
-	
-	
-	
 }

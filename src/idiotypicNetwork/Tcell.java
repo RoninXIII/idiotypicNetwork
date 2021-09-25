@@ -55,7 +55,7 @@ public class Tcell {
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood.
 		GridCellNgh<AntigenPresentingCell> nghCreator = new GridCellNgh<AntigenPresentingCell>(grid, pt,
-				AntigenPresentingCell.class, 1, 1);
+				AntigenPresentingCell.class, 1, 1, 1);
 
 		// import repast . simphony . query . space . grid . GridCell
 		List<GridCell<AntigenPresentingCell>> gridCells = nghCreator.getNeighborhood(false);
@@ -64,7 +64,7 @@ public class Tcell {
 
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood.
-		GridCellNgh<Antibody> antibodiesNghCreator = new GridCellNgh<Antibody>(grid, pt, Antibody.class, 1, 1);
+		GridCellNgh<Antibody> antibodiesNghCreator = new GridCellNgh<Antibody>(grid, pt, Antibody.class, 1, 1, 1);
 
 		// import repast . simphony . query . space . grid . GridCell
 		List<GridCell<Antibody>> antibodiesGridCells = antibodiesNghCreator.getNeighborhood(false);
@@ -187,18 +187,25 @@ public class Tcell {
 	}
 
 	public void moveTowards(GridPoint pt) {
+		double heading = 0;
+				if (!pt.equals(grid.getLocation(this))) {
+					NdPoint myPoint = space.getLocation(this);
+					NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY(),pt.getZ());
+					// Randomly change the current heading plus or minus 50 degrees
+					double sgn = RandomHelper.nextDoubleFromTo(-0.5, 0.5);       // a value between -0.5 and 0.5
+					if (sgn > 0)
+						heading = heading + RandomHelper.nextDoubleFromTo(0, 50);
+					else
+						heading = heading - RandomHelper.nextDoubleFromTo(0, 50);
 
-		if (!pt.equals(grid.getLocation(this))) {
-			NdPoint myPoint = space.getLocation(this);
-			NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY());
-			double angle = SpatialMath.calcAngleFor2DMovement(space, myPoint, otherPoint);
-			space.moveByVector(this, 1, angle, 0);
-			myPoint = space.getLocation(this);
-			grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY());
-			// moved = true;
-		}
+					// Move the agent on the space by one unit according to its new heading
+					space.moveByVector(this, 1, Math.toRadians(heading),0,0);
+					myPoint = space.getLocation(this);
+					grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY(),(int)myPoint.getZ());
+					// moved = true;
+				}
 
-	}
+			}
 
 	public void suppress() {
 

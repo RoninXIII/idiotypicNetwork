@@ -31,15 +31,15 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 
 		context.setId("idiotypicNetwork");
 
-		int x = 20, y = 20;
+		int x = 20, y = 20, z = 20;
 		ContinuousSpaceFactory spaceFactory = ContinuousSpaceFactoryFinder.createContinuousSpaceFactory(null);
 		ContinuousSpace<Object> space = spaceFactory.createContinuousSpace("space", context,
-				new RandomCartesianAdder<Object>(), new repast.simphony.space.continuous.WrapAroundBorders(), x, y);
+				new RandomCartesianAdder<Object>(), new repast.simphony.space.continuous.WrapAroundBorders(), x, y, z);
 
 		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
 		// Correct import : import repast . simphony . space . grid . WrapAroundBorders;
 		Grid<Object> grid = gridFactory.createGrid("grid", context,
-				new GridBuilderParameters<Object>(new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, x, y));
+				new GridBuilderParameters<Object>(new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, x, y, z));
 
 		Parameters params = RunEnvironment.getInstance().getParameters();
 		int bCellCount = params.getInteger("cell_count");
@@ -97,7 +97,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 
 		for (Object obj : context) {
 			NdPoint pt = space.getLocation(obj);
-			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY());
+			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY(),(int) pt.getZ());
 		}
 
 		return context;
