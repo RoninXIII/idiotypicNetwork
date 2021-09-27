@@ -44,9 +44,12 @@ public class Bcell {
 	protected ContinuousSpace<Object> space;
 	protected int id;
 	protected int antigenId;
-	protected static HashMap<Integer, Integer> antibodiesHashMap = new HashMap<Integer, Integer>();
+	// Keep track of the number of the antibodies with a certain id
+	public static HashMap<Integer, Integer> antibodiesHashMap = new HashMap<Integer, Integer>();
 	protected static int countAntibodies;
 	private boolean hasClone = false;
+	// Will be set to the tick on which the bcell is activated
+	protected double timeToReleaseAntibodies = 0;
 	/*
 	 * The Cell will move about the ContinuousSpace and we will simply round the
 	 * ContinuousSpace location to determine the corresponding Grid location
@@ -94,9 +97,10 @@ public class Bcell {
 			Antigen antigen = this.getAntigen();
 			this.type = typeList[1];
 			this.antigenId = antigen.id;
-
+			this.timeToReleaseAntibodies = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
 			return;
-		} else if (this.type == "activated" && this.lookForAntigen()) {
+		} else if (this.type == "activated" && this.lookForAntigen()
+				&& RunEnvironment.getInstance().getCurrentSchedule().getTickCount() >= timeToReleaseAntibodies + 200) {
 
 			Antigen antigen = (Antigen) this.getAntigen();
 
@@ -104,51 +108,50 @@ public class Bcell {
 				this.cloneCell();
 				this.hasClone = true;
 				this.releaseAntiBodies();
-			}else if(hasClone == true & this.antigenId == antigen.id) {
-				
-				this.releaseAntiBodies();			
-			} 
+			} else if (hasClone == true & this.antigenId == antigen.id) {
+
+				this.releaseAntiBodies();
+			}
 			return;
 
-		} else if (this.lookForTcell()) {
+		} else if (this.type == "naive" && this.lookForTcell()) {
 			Tcell tcell = this.getTcell();
-
+		
 			if (tcell.type == "helper" && tcell.type2 == "activated" && tcell.antigenId == this.antigenId) {
 				this.type = typeList[1];
-				// this.releaseMoreAntibodies(gridCells);
+				this.antigenId = tcell.antigenId;
+				this.timeToReleaseAntibodies = RunEnvironment.getInstance().getCurrentSchedule().getTickCount();
+				this.releaseMoreAntibodies();
+				return;
+			}
+
+		} else if (this.type == "activated" && this.lookForTcell()) {
+
+			Tcell tcell = this.getTcell();
+			
+			if (tcell.type == "helper" && tcell.type2 == "activated" && tcell.antigenId == this.antigenId) {
+				this.releaseMoreAntibodies();
 				return;
 			}
 
 		}
-		
-		
-		
-		
-		
-		if (context.getObjects(Antigen.class).size() == 0) {
-			die();
-			return;
-		}
+
 
 		GridPoint pointWithMostAntigens = null;
 		int maxCount = -1;
 		for (GridCell<Antigen> gridCell : antigensGridCells) {
-			
+
 			if (gridCell.size() > maxCount) {
 				pointWithMostAntigens = gridCell.getPoint();
 				maxCount = gridCell.size();
 			}
 		}
-	
+
 		this.moveTowards(pointWithMostAntigens);
 
 	}
 
-	private void die() {
-		Context<Object> context = ContextUtils.getContext(this);
-		context.remove(this);
-		
-	}
+
 
 	public List<GridCell<Object>> getNeighborhood() {
 
@@ -157,13 +160,13 @@ public class Bcell {
 
 		// use the GridCellNgh class to create GridCells for
 		// the surrounding neighborhood.
-		GridCellNgh<Object> nghCreator = new GridCellNgh<Object>(grid, pt, Object.class, 1, 1);
+		GridCellNgh<Object> nghCreator = new GridCellNgh<Object>(grid, pt, Object.class, 1, 1, 1);
 
 		// import repast . simphony . query . space . grid . GridCell
 		List<GridCell<Object>> gridCells = nghCreator.getNeighborhood(false);
 
 		SimUtilities.shuffle(gridCells, RandomHelper.getUniform());
-		
+
 		return gridCells;
 
 	}
@@ -173,23 +176,23 @@ public class Bcell {
 		int releasedAntibodies = 0;
 		Context<Object> context = ContextUtils.getContext(this);
 		Network<Object> net = (Network<Object>) context.getProjection("antibodies network");
-		List<GridCell<Object>> gridCells = this.getNeighborhood();
-		for (GridCell<Object> gridCell : gridCells) {
+		GridPoint pt = grid.getLocation(this);
 
-			if (gridCell.size() == 0 && releasedAntibodies < 2) {
-				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(space, grid, id, this.antigenId);
-				context.add(ab);
-				net.addEdge(this, ab);
-				grid.moveTo(ab, pt.getX(), pt.getY());
-				releasedAntibodies++;
+		for (int i = 0; i < 3; i++) {
 
-				if (antibodiesHashMap.containsKey(antigenId)) {
-					antibodiesHashMap.put(this.antigenId, antibodiesHashMap.get(this.antigenId) + 1);
-				} else {
-					antibodiesHashMap.put(this.antigenId, releasedAntibodies);
-				}
+			Antibody ab = new Antibody(space, grid, id, this.antigenId);
+			context.add(ab);
+			net.addEdge(this, ab);
+			grid.moveTo(ab, pt.getX(), pt.getY(), pt.getZ());
+
+			releasedAntibodies++;
+
+			if (antibodiesHashMap.containsKey(antigenId)) {
+				antibodiesHashMap.put(this.antigenId, antibodiesHashMap.get(this.antigenId) + 1);
+			} else {
+				antibodiesHashMap.put(this.antigenId, releasedAntibodies);
 			}
+
 		}
 
 	}
@@ -197,33 +200,28 @@ public class Bcell {
 	public void releaseMoreAntibodies() {
 		Context<Object> context = ContextUtils.getContext(this);
 		Network<Object> net = (Network<Object>) context.getProjection("antibodies network");
+		GridPoint pt = grid.getLocation(this);
 
-		
-		List<GridCell<Object>> gridCells = this.getNeighborhood();
-		for (GridCell<Object> gridCell : gridCells) {
-
-			if (gridCell.size() == 0) {
-				GridPoint pt = gridCell.getPoint();
-				Antibody ab = new Antibody(space, grid, id, this.antigenId);
-				context.add(ab);
-				net.addEdge(this, ab);
-				grid.moveTo(ab, pt.getX(), pt.getY());
-
-				if (antibodiesHashMap.containsKey(antigenId)) {
-					antibodiesHashMap.put(this.antigenId, antibodiesHashMap.get(this.antigenId) + 1);
-				} else {
-					antibodiesHashMap.put(this.antigenId, 1);
-				}
+		for (int i = 0; i < 6; i++) {
+			Antibody ab = new Antibody(space, grid, id, this.antigenId);
+			context.add(ab);
+			net.addEdge(this, ab);
+			grid.moveTo(ab, pt.getX(), pt.getY(), pt.getZ());
+			space.moveTo(ab, pt.getX(), pt.getY(), pt.getZ());
+			if (antibodiesHashMap.containsKey(antigenId)) {
+				antibodiesHashMap.put(this.antigenId, antibodiesHashMap.get(this.antigenId) + 1);
+			} else {
+				antibodiesHashMap.put(this.antigenId, 1);
 			}
 		}
 
 	}
 
-	private Tcell getTcell() {
+	public Tcell getTcell() {
 
 		GridPoint pt = grid.getLocation(this);
 
-		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
+		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY(), pt.getZ())) {
 			if (obj instanceof Tcell) {
 				return (Tcell) obj;
 			}
@@ -232,11 +230,11 @@ public class Bcell {
 		return null;
 	}
 
-	private Antigen getAntigen() {
+	public Antigen getAntigen() {
 
 		GridPoint pt = grid.getLocation(this);
 
-		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
+		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY(), pt.getZ())) {
 			if (obj instanceof Antigen) {
 				return (Antigen) obj;
 			}
@@ -249,7 +247,7 @@ public class Bcell {
 
 		GridPoint pt = grid.getLocation(this);
 
-		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
+		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY(), pt.getZ())) {
 			if (obj instanceof Antigen) {
 				return true;
 			}
@@ -262,7 +260,7 @@ public class Bcell {
 
 		GridPoint pt = grid.getLocation(this);
 
-		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
+		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY(), pt.getZ())) {
 			if (obj instanceof Tcell) {
 				return true;
 			}
@@ -282,30 +280,25 @@ public class Bcell {
 		NdPoint spacePt = space.getLocation(this);
 		MemoryKeeperCell cell = new MemoryKeeperCell(space, grid, "activated", this.id, this.antigenId);
 		context.add(cell);
-		grid.moveTo(cell, pt.getX(), pt.getY());
-		space.moveTo(cell, spacePt.getX(), spacePt.getY());
+		grid.moveTo(cell, pt.getX(), pt.getY(), pt.getZ());
+		space.moveTo(cell, spacePt.getX(), spacePt.getY(), spacePt.getZ());
 
 	}
 
 	public void moveTowards(GridPoint pt) {
-		double heading = 0;
-				if (!pt.equals(grid.getLocation(this))) {
-					NdPoint myPoint = space.getLocation(this);
-					NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY(),pt.getZ());
-					// Randomly change the current heading plus or minus 50 degrees
-					double sgn = RandomHelper.nextDoubleFromTo(-0.5, 0.5);       // a value between -0.5 and 0.5
-					if (sgn > 0)
-						heading = heading + RandomHelper.nextDoubleFromTo(0, 50);
-					else
-						heading = heading - RandomHelper.nextDoubleFromTo(0, 50);
 
-					// Move the agent on the space by one unit according to its new heading
-					space.moveByVector(this, 1, Math.toRadians(heading),0,0);
-					myPoint = space.getLocation(this);
-					grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY(),(int)myPoint.getZ());
-					// moved = true;
-				}
+		if (!pt.equals(grid.getLocation(this))) {
+			NdPoint myPoint = space.getLocation(this);
+			NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY(), pt.getZ());
 
-			}
+			// Move the agent on the space by one unit according to its new heading
+			// space.moveByVector(this, 1, Math.toRadians(heading),0,0);
+			space.moveTo(this, otherPoint.getX(), otherPoint.getY(), otherPoint.getZ());
+			myPoint = space.getLocation(this);
+			grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY(), (int) myPoint.getZ());
+			// moved = true;
+		}
+
+	}
 
 }

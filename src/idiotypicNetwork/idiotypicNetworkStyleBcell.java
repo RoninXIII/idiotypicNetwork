@@ -125,7 +125,7 @@ public class idiotypicNetworkStyleBcell extends DefaultStyleOGL2D {
 
 	    @Override
 	    public float getScale(Object object) {
-	        return 0.2f;
+	        return 0.4f;
 	    }
 	    
 }

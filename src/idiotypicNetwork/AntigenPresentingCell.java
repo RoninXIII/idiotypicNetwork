@@ -102,7 +102,8 @@ public class AntigenPresentingCell {
 						heading = heading - RandomHelper.nextDoubleFromTo(0, 50);
 
 					// Move the agent on the space by one unit according to its new heading
-					space.moveByVector(this, 1, Math.toRadians(heading),0,0);
+					//space.moveByVector(this, 1, Math.toRadians(heading),0,0);
+					space.moveTo(this, otherPoint.getX(),otherPoint.getY(),otherPoint.getZ());
 					myPoint = space.getLocation(this);
 					grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY(),(int)myPoint.getZ());
 					// moved = true;

@@ -4,8 +4,10 @@
 package idiotypicNetwork;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
+import bsh.This;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.ScheduledMethod;
@@ -32,18 +34,31 @@ public class Tcell {
 	protected String type = "";
 	private String[] typeList = { "helper", "suppressor", "naive", "activated" };
 	protected String type2 = "";
-	protected int antigenId = 0;
-	protected static List<Integer> antibodiesToKill = new ArrayList<>();
 	private ContinuousSpace<Object> space;
 	private Grid<Object> grid;
 
-	public Tcell(ContinuousSpace<Object> space, Grid<Object> grid, String type, String type2) {
+	// If the t cell is an helper it will elicit only the bcell with this id
+	protected int antigenId = 0;
+	// The list of all ids present in the model.
+	// This is useful since the ids are assigned in a random way and so it is
+	// possible that not all numbers are used
+	public static List<Integer> antigensIds = new ArrayList<>();
+	// The ids of the antibodies to suppress.
+	// They will be put in the array only if the antigens with a certain id are
+	// eliminated and if the
+	// number of the antibodies has reached the threshold (it starts the suppression
+	// operation
+	protected List<Integer> antibodiesToSuppress = new ArrayList<>();
+
+	public Tcell(ContinuousSpace<Object> space, Grid<Object> grid, String type, String type2,
+			List<Integer> antigensIds) {
 		super();
 
 		this.grid = grid;
 		this.space = space;
 		this.type = type;
 		this.type2 = type2;
+		this.antigensIds = antigensIds;
 	}
 
 	@ScheduledMethod(start = 1, interval = 1)
@@ -74,7 +89,7 @@ public class Tcell {
 		GridPoint freeCell = null;
 
 		// If naive t helper encounters an apc it will be activated
-		if (this.type2 == "naive" && this.type == "helper" && this.lookForApc(gridCells)) {
+		if (this.type == "helper" && this.type2 == "naive" && this.lookForApc(gridCells)) {
 
 			Antigen antigen = this.getAntigenFromApc(gridCells);
 
@@ -88,21 +103,19 @@ public class Tcell {
 
 			Context<Object> context = ContextUtils.getContext(this);
 
-			// If all antigens are eliminated and the number of antibodies has reaches the
+			// If all antigens are eliminated and the number of antibodies has reached the
 			// threshold
-			if (context.getObjects(Antigen.class).size() == 0 && context.getObjects(Antibody.class).size() >= 10) {
-
+			if (this.checkSuppressionConditions()) {
 				// The t suppressor start searching for antibodies to suppress since the antigen
 				// is not alive anymore
 				this.type2 = this.typeList[3];
-
+				return;
 			}
-	
 
 		} else if (this.type == "suppressor" && this.type2 == "activated") {
 
 			Context<Object> context = ContextUtils.getContext(this);
-			
+
 			GridPoint pointWithMostAntibodies = null;
 			int maxCount = -1;
 			for (GridCell<Antibody> cell : antibodiesGridCells) {
@@ -111,11 +124,11 @@ public class Tcell {
 					maxCount = cell.size();
 				}
 			}
-			
-			if (context.getObjects(Antibody.class).size() > 10) {
+
+			if (this.checkSuppressionConditions()) {
 				suppress();
 			}
-		
+
 			moveTowards(pointWithMostAntibodies);
 
 			return;
@@ -136,6 +149,48 @@ public class Tcell {
 			this.moveTowards(freeCell);
 
 		}
+
+	}
+
+	private boolean checkSuppressionConditions() {
+
+		Bcell bcell = new Bcell(space, grid, "", 0);
+		// Number of antibodies for each antigen id
+		HashMap<Integer, Integer> antibodiesHashMap = bcell.antibodiesHashMap;
+		List<Integer> antibodiesToKilList = new ArrayList<>();
+
+		// Loop through all antigens ids in the system
+		for (Integer id : antigensIds) {
+
+			if (this.getAntigensNumber(id) == 0) {
+				antibodiesToKilList.add(id);
+
+			}
+
+			// If an id is present inside antibodyToSuppress it means that all the antigens
+			// with this id are eliminated.
+			// If there is this scenario and if the number of antibodies of this kind has
+			// reached the threshold
+			// the t cells will start the suppression of the b cells and the antibodies that
+			// met the antigen with
+			// the previous id.
+
+			if (antibodiesToKilList.contains(id) && antibodiesHashMap.get(id) >= 10) {
+				antibodiesToSuppress.add(id);
+			}
+
+		}
+
+		if (antibodiesToSuppress.size() > 0) {
+			return true;
+		} else
+			return false;
+
+	}
+
+	private int getAntibodiesFromId(int id) {
+
+		return 0;
 
 	}
 
@@ -186,43 +241,89 @@ public class Tcell {
 
 	}
 
+	public int getAntigensNumber(int id) {
+
+		Context<Object> context = ContextUtils.getContext(this);
+		int count = 0;
+		for (int i = 0; i < context.getObjects(Antigen.class).size(); i++) {
+			Antigen antigen = (Antigen) context.getObjects(Antigen.class).get(i);
+			if (antigen.id == id) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
+	public int getAntibodiesNumber(int id) {
+
+		Context<Object> context = ContextUtils.getContext(this);
+		int count = 0;
+		for (int i = 0; i < context.getObjects(Antibody.class).size(); i++) {
+			Antibody antibody = (Antibody) context.getObjects(Antibody.class).get(i);
+			if (antibody.id == id) {
+				count++;
+			}
+		}
+
+		return count;
+	}
+
 	public void moveTowards(GridPoint pt) {
 		double heading = 0;
-				if (!pt.equals(grid.getLocation(this))) {
-					NdPoint myPoint = space.getLocation(this);
-					NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY(),pt.getZ());
-					// Randomly change the current heading plus or minus 50 degrees
-					double sgn = RandomHelper.nextDoubleFromTo(-0.5, 0.5);       // a value between -0.5 and 0.5
-					if (sgn > 0)
-						heading = heading + RandomHelper.nextDoubleFromTo(0, 50);
-					else
-						heading = heading - RandomHelper.nextDoubleFromTo(0, 50);
+		if (!pt.equals(grid.getLocation(this))) {
+			NdPoint myPoint = space.getLocation(this);
+			NdPoint otherPoint = new NdPoint(pt.getX(), pt.getY(), pt.getZ());
+			// Randomly change the current heading plus or minus 50 degrees
+			double sgn = RandomHelper.nextDoubleFromTo(-0.5, 0.5); // a value between -0.5 and 0.5
+			if (sgn > 0)
+				heading = heading + RandomHelper.nextDoubleFromTo(0, 50);
+			else
+				heading = heading - RandomHelper.nextDoubleFromTo(0, 50);
 
-					// Move the agent on the space by one unit according to its new heading
-					space.moveByVector(this, 1, Math.toRadians(heading),0,0);
-					myPoint = space.getLocation(this);
-					grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY(),(int)myPoint.getZ());
-					// moved = true;
-				}
+			// Move the agent on the space by one unit according to its new heading
+			// space.moveByVector(this, 1, Math.toRadians(heading),0,0);
+			space.moveTo(this, otherPoint.getX(), otherPoint.getY(), otherPoint.getZ());
+			myPoint = space.getLocation(this);
+			grid.moveTo(this, (int) myPoint.getX(), (int) myPoint.getY(), (int) myPoint.getZ());
+			// moved = true;
+		}
 
-			}
+	}
 
 	public void suppress() {
 
 		GridPoint pt = grid.getLocation(this);
-		List<Object> antibodiesToSuppress = new ArrayList<Object>();
-		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY())) {
+
+		// This list will contain all the antibodies encountered
+		List<Object> antibodiesToSuppressList = new ArrayList<Object>();
+		List<Object> bcellsToSuppressList = new ArrayList<Object>();
+		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY(), pt.getZ())) {
 			if (obj instanceof Antibody) {
-				antibodiesToSuppress.add(obj);
+				antibodiesToSuppressList.add(obj);
+			}else if (obj instanceof Bcell) {
+				bcellsToSuppressList.add(obj);
 			}
 		}
 
-		if (antibodiesToSuppress.size() > 0) {
-			int index = RandomHelper.nextIntFromTo(0, antibodiesToSuppress.size() - 1);
-			Object obj = antibodiesToSuppress.get(index);
-			NdPoint spacePt = space.getLocation(obj);
-			Context<Object> context = ContextUtils.getContext(obj);
-			context.remove(obj);
+		for (Object object : antibodiesToSuppressList) {
+			Antibody antibody = (Antibody) object;
+			
+			if (antibodiesToSuppress.contains(antibody.antigenId)) {
+				Context<Object> context = ContextUtils.getContext(object);
+				context.remove(object);
+			}
+
+		}
+		
+		for (Object object : bcellsToSuppressList) {
+			Bcell bcell = (Bcell) object;
+			
+			if (antibodiesToSuppress.contains(bcell.antigenId)) {
+				Context<Object> context = ContextUtils.getContext(object);
+				context.remove(object);
+			}
+
 		}
 
 	}

@@ -11,10 +11,11 @@ import org.jogamp.java3d.TextureAttributes;
 import org.jogamp.java3d.utils.geometry.Primitive;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.image.TextureLoader;
-
+import org.jogamp.java3d.utils.geometry.GeometryServiceImpl;
 import repast.simphony.visualization.visualization3D.style.Style3D;
 import repast.simphony.visualization.visualization3D.style.TaggedAppearance;
 import repast.simphony.visualization.visualization3D.style.TaggedBranchGroup;
+
 
 
 public class idiotypicNetworkStyle3DTcell implements Style3D<Tcell> {
@@ -24,14 +25,14 @@ public class idiotypicNetworkStyle3DTcell implements Style3D<Tcell> {
 		
 		super();
 		
-		TextureLoader loader = new TextureLoader("icons/tcell3d.png", "RGB", new Container());
+		TextureLoader loader = new TextureLoader("icons/tcell3d.jpg", "RGB", new Container());
     texture = loader.getTexture();
     texture.setBoundaryModeS(Texture.WRAP);
     texture.setBoundaryModeT(Texture.WRAP);
 		
 	}
 	
-	@Override
+	
 	public TaggedBranchGroup getBranchGroup(Tcell tcell, TaggedBranchGroup taggedGroup) {
 		if (taggedGroup == null || taggedGroup.getTag() == null) {
 			taggedGroup = new TaggedBranchGroup("DEFAULT");
@@ -45,7 +46,7 @@ public class idiotypicNetworkStyle3DTcell implements Style3D<Tcell> {
 	    ap.setTextureAttributes(texAttr);
 			
 			int primflags = Primitive.GENERATE_NORMALS + Primitive.GENERATE_TEXTURE_COORDS;
-			Sphere sphere = new Sphere(0.04f, primflags,60);
+			Sphere sphere = new Sphere(0.08f, primflags,60);
 
 			Shape3D shape = new Shape3D(sphere.getShape().getGeometry(),ap);
 			shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
@@ -63,7 +64,12 @@ public class idiotypicNetworkStyle3DTcell implements Style3D<Tcell> {
 		return null; 
 	}
 	public String getLabel(Tcell tcell, String currentLabel) {		
-		//return moon.getName();
+		
+		/*if (tcell.type2 == "helper" && tcell.type2 == "naive") {
+			return "T-helper";
+		} else if (tcell.type2 == "helper" && tcell.type2 == "activated") {
+			return "Th - "+tcell.antigenId;
+		}else return "T-suppressor";*/
 		return null;
 	}
 	public Color getLabelColor(Tcell tcell, Color currentColor) {

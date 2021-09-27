@@ -11,9 +11,9 @@ import org.jogamp.java3d.TextureAttributes;
 import org.jogamp.java3d.utils.geometry.Primitive;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.image.TextureLoader;
+import org.jogamp.java3d.utils.geometry.GeometryServiceImpl;
 
-
-
+import repast.simphony.visualization.visualization3D.AppearanceFactory;
 import repast.simphony.visualization.visualization3D.style.Style3D;
 import repast.simphony.visualization.visualization3D.style.TaggedAppearance;
 import repast.simphony.visualization.visualization3D.style.TaggedBranchGroup;
@@ -27,7 +27,7 @@ Texture texture;
 	public idiotypicNetworkStyle3DAntibody (){
 		super();
 		
-		TextureLoader loader = new TextureLoader("icons/antibody3d.jpg", "RGB", new Container());
+		TextureLoader loader = new TextureLoader("icons/antibody3d.png", "RGB", new Container());
     texture = loader.getTexture();
     texture.setBoundaryModeS(Texture.WRAP);
     texture.setBoundaryModeT(Texture.WRAP);
@@ -46,8 +46,8 @@ Texture texture;
 	    ap.setTextureAttributes(texAttr);
 			
 			int primflags = Primitive.GENERATE_NORMALS + Primitive.GENERATE_TEXTURE_COORDS;
-			Sphere sphere = new Sphere(0.01f, primflags,60);
-
+			Sphere sphere = new Sphere(0.08f, primflags,60);
+		
 			Shape3D shape = new Shape3D(sphere.getShape().getGeometry(),ap);
 			shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
 			shape.setCapability(Shape3D.ALLOW_APPEARANCE_WRITE);
@@ -64,8 +64,8 @@ Texture texture;
 		return null; 
 	}
 	public String getLabel(Antibody antibody, String currentLabel) {		
-		//return moon.getName();
 		return null;
+		//return "Ab"+antibody.antigenId;
 	}
 	public Color getLabelColor(Antibody antibody, Color currentColor) {
 		return Color.YELLOW;
@@ -81,10 +81,10 @@ Texture texture;
 	}
 	public TaggedAppearance getAppearance(Antibody antibody, TaggedAppearance taggedAppearance, Object shapeID) {
 		
-//		if (taggedAppearance == null) {
-//			taggedAppearance = new TaggedAppearance();
-//		}
-//		AppearanceFactory.setMaterialAppearance(taggedAppearance.getAppearance(), Color.blue);
+	/*	if (taggedAppearance == null) {
+			taggedAppearance = new TaggedAppearance();
+		}
+		AppearanceFactory.setMaterialAppearance(taggedAppearance.getAppearance(), Color.blue);*/
 		
 		return taggedAppearance;
 	}

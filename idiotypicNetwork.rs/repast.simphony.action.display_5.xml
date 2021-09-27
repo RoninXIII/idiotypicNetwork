@@ -1,34 +1,34 @@
 <repast.simphony.visualization.engine.CartesianDisplayDescriptor simphonyVersion="2.8.0">
-  <name>Space Display</name>
-  <type>3D</type>
+  <name>Space2D Display</name>
+  <type>2D</type>
   <styles>
     <entry>
       <string>idiotypicNetwork.AntigenPresentingCell</string>
-      <string>idiotypicNetwork.idiotypicNetworkStyle3DApc</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleApc</string>
     </entry>
     <entry>
       <string>idiotypicNetwork.Antigen</string>
-      <string>idiotypicNetwork.idiotypicNetworkStyle3DAntigen</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleAntigen</string>
     </entry>
     <entry>
       <string>idiotypicNetwork.Bcell</string>
-      <string>idiotypicNetwork.idiotypicNetworkStyle3DBcell</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleBcell</string>
     </entry>
     <entry>
       <string>idiotypicNetwork.Tcell</string>
-      <string>idiotypicNetwork.idiotypicNetworkStyle3DTcell</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleTcell</string>
     </entry>
     <entry>
       <string>idiotypicNetwork.Blood</string>
-      <string>repast.simphony.visualization.editedStyle.EditedStyle3D</string>
+      <string>repast.simphony.visualization.editedStyle.EditedStyle2D</string>
     </entry>
     <entry>
       <string>idiotypicNetwork.Antibody</string>
-      <string>idiotypicNetwork.idiotypicNetworkStyle3DAntibody</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleAntibody</string>
     </entry>
     <entry>
       <string>idiotypicNetwork.MemoryKeeperCell</string>
-      <string>idiotypicNetwork.idiotypicNetworkStyle3DMemoryCell</string>
+      <string>idiotypicNetwork.idiotypicNetworkStyleMemoryKeeper</string>
     </entry>
   </styles>
   <editedStyles>
@@ -50,7 +50,7 @@
     </entry>
     <entry>
       <string>idiotypicNetwork.Blood</string>
-      <string>idiotypicNetwork.Blood.style_6.xml</string>
+      <string>idiotypicNetwork.Blood.style_7.xml</string>
     </entry>
     <entry>
       <string>idiotypicNetwork.Antibody</string>
@@ -64,13 +64,13 @@
   <netStyles>
     <entry>
       <string>antibodies network</string>
-      <string>repast.simphony.visualization.editedStyle.EditedEdgeStyle3D</string>
+      <string>repast.simphony.visualization.editedStyle.EditedEdgeStyle2D</string>
     </entry>
   </netStyles>
   <editedNetStyles>
     <entry>
       <string>antibodies network</string>
-      <string>antibodiesnetwork.style_5.xml</string>
+      <string>antibodiesnetwork.style_8.xml</string>
     </entry>
   </editedNetStyles>
   <frequency>ON_MOVE</frequency>
@@ -81,7 +81,7 @@
     <pType>LAST</pType>
     <duration>-1.0</duration>
     <frequency>REPEAT</frequency>
-    <hashCode>-566812696</hashCode>
+    <hashCode>1209938001</hashCode>
   </schedParams>
   <layoutClassName>foo.bar.baz</layoutClassName>
   <layoutProjection>space</layoutProjection>
@@ -89,31 +89,31 @@
   <layerOrder>
     <entry>
       <string>idiotypicNetwork.AntigenPresentingCell</string>
-      <int>6</int>
-    </entry>
-    <entry>
-      <string>idiotypicNetwork.Antigen</string>
-      <int>5</int>
-    </entry>
-    <entry>
-      <string>idiotypicNetwork.Bcell</string>
-      <int>4</int>
-    </entry>
-    <entry>
-      <string>idiotypicNetwork.Tcell</string>
-      <int>3</int>
-    </entry>
-    <entry>
-      <string>idiotypicNetwork.Blood</string>
       <int>2</int>
     </entry>
     <entry>
-      <string>idiotypicNetwork.Antibody</string>
+      <string>idiotypicNetwork.Antigen</string>
+      <int>3</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Bcell</string>
+      <int>6</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Tcell</string>
       <int>1</int>
     </entry>
     <entry>
-      <string>idiotypicNetwork.MemoryKeeperCell</string>
+      <string>idiotypicNetwork.Blood</string>
       <int>0</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.Antibody</string>
+      <int>4</int>
+    </entry>
+    <entry>
+      <string>idiotypicNetwork.MemoryKeeperCell</string>
+      <int>5</int>
     </entry>
   </layerOrder>
   <projections>
@@ -129,7 +129,7 @@
     </repast.simphony.scenario.data.ProjectionData>
   </projections>
   <visualizationProperties class="repast.simphony.visualization.UnitSizeLayoutProperties">
-    <unitSize>0.06</unitSize>
+    <unitSize>20.0</unitSize>
   </visualizationProperties>
   <projectionDescriptors>
     <entry>
@@ -149,15 +149,15 @@
             <map>
               <entry>
                 <string>COLOR</string>
-                <int>-1</int>
+                <int>-16777216</int>
               </entry>
               <entry>
                 <string>UNIT_SIZE</string>
-                <float>0.06</float>
+                <float>20.0</float>
               </entry>
               <entry>
                 <string>SHOW</string>
-                <boolean>true</boolean>
+                <boolean>false</boolean>
               </entry>
             </map>
           </entry>
@@ -167,9 +167,9 @@
   </projectionDescriptors>
   <props/>
   <backgroundColor>
-    <red>0</red>
-    <green>0</green>
-    <blue>0</blue>
+    <red>255</red>
+    <green>255</green>
+    <blue>255</blue>
     <alpha>255</alpha>
   </backgroundColor>
   <valueLayers/>

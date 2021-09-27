@@ -1,6 +1,9 @@
 package idiotypicNetwork;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.concurrent.ThreadLocalRandom;
 
 import repast.simphony.context.Context;
@@ -38,56 +41,73 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 
 		GridFactory gridFactory = GridFactoryFinder.createGridFactory(null);
 		// Correct import : import repast . simphony . space . grid . WrapAroundBorders;
-		Grid<Object> grid = gridFactory.createGrid("grid", context,
-				new GridBuilderParameters<Object>(new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, x, y, z));
+		Grid<Object> grid = gridFactory.createGrid("grid", context, new GridBuilderParameters<Object>(
+				new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, x, y, z));
 
 		Parameters params = RunEnvironment.getInstance().getParameters();
 		int bCellCount = params.getInteger("cell_count");
-		//int tCellCount = params.getInteger("Tcell_count");
+		// int tCellCount = params.getInteger("Tcell_count");
 		int antigenCount = params.getInteger("Antigen_count");
 		int apcCount = params.getInteger("APC_count");
 
 		String[] typeList = { "helper", "suppressor" };
 
-		
-		// add B cells
-		for (int i = 0; i < bCellCount; i++) {
-			// Bcell(grid,"naive or activated", id)
-			context.add(new Bcell(space, grid, "naive", i));
-		}
+		List<Integer> antigensIds = new ArrayList<>();
 
 		// add blood cells
-	/*	for (int i = 0; i < (x * y * 3); i++) {
+		for (int i = 0; i < (x * y) + 50; i++) {
 			// Bcell(grid,"naive or activated", id)
 			context.add(new Blood(grid, space));
-		}*/
+		}
+
+		// add Antigens
+		for (int j = 0; j < antigenCount; j++) {
+
+			int id = RandomHelper.nextIntFromTo(0, 2);
+			antigensIds.add(id);
+			context.add(new Antigen(space, grid, id));
+		}
+		
+		Set<Integer> set = new HashSet<>(antigensIds);
+		antigensIds.clear();
+		antigensIds.addAll(set);
+
+		// add B cells
+		
+		if ((antigenCount >= 7 && antigenCount <= 10) || antigenCount > 10) {
+			
+			for (int i = 0; i < 6; i++) {
+				// Bcell(grid,"naive or activated", id)
+				context.add(new Bcell(space, grid, "naive", i));
+			}
+		} else {
+			
+			for (int i = 0; i < 4; i++) {
+				// Bcell(grid,"naive or activated", id)
+				context.add(new Bcell(space, grid, "naive", i));
+			}
+			
+
+		}
+		
 
 		// add T cells
 
 		if (antigenCount <= 3) {
 
-		
-		context.add(new Tcell(space, grid, typeList[1], "naive"));
-			
-		
+			context.add(new Tcell(space, grid, typeList[1], "naive", antigensIds));
+
 		} else if (antigenCount > 3 && antigenCount <= 10) {
-			
+
 			for (int j = 0; j < 3; j++) {
 				if (j % 2 == 0) {
-					context.add(new Tcell(space, grid, typeList[0], "naive"));
+					context.add(new Tcell(space, grid, typeList[0], "naive", antigensIds));
 				} else {
-					context.add(new Tcell(space, grid, typeList[1], "naive"));
+					context.add(new Tcell(space, grid, typeList[1], "naive", antigensIds));
 				}
 
 			}
-			
-		} 
 
-		// add Antigens
-		for (int j = 0; j < antigenCount; j++) {
-
-			// int id = RandomHelper.nextIntFromTo(0, 3);
-			context.add(new Antigen(space, grid, 0));
 		}
 
 		// add Antigens Presenting Cell
@@ -95,9 +115,13 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 			context.add(new AntigenPresentingCell(space, grid, new ArrayList<>()));
 		}
 
+		immuneSystem immuneSystem = new immuneSystem(grid, space);
+
+		context.add(immuneSystem);
+
 		for (Object obj : context) {
 			NdPoint pt = space.getLocation(obj);
-			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY(),(int) pt.getZ());
+			grid.moveTo(obj, (int) pt.getX(), (int) pt.getY(), (int) pt.getZ());
 		}
 
 		return context;

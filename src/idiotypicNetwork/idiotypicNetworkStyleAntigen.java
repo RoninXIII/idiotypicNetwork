@@ -35,7 +35,7 @@ public class idiotypicNetworkStyleAntigen  extends DefaultStyleOGL2D {
     @Override
     public VSpatial getVSpatial(Object agent, VSpatial spatial) {
     	try {
-    	    img = ImageIO.read(new File("C:\\Users\\Mario\\eclipse-workspace-repast\\idiotypicNetwork\\idiotypicNetwork\\icons\\virus.png"));
+    	    img = ImageIO.read(new File("C:\\Users\\Mario\\eclipse-workspace-repast\\idiotypicNetwork\\idiotypicNetwork\\icons\\virus2d.png"));
     	   
     	} catch (IOException e) {
     		
@@ -121,7 +121,7 @@ public class idiotypicNetworkStyleAntigen  extends DefaultStyleOGL2D {
 
 	    @Override
 	    public float getScale(Object object) {
-	        return 0.2f;
+	        return 0.1f;
 	    }
 	    
 	

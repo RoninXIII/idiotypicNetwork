@@ -11,7 +11,7 @@ import org.jogamp.java3d.TextureAttributes;
 import org.jogamp.java3d.utils.geometry.Primitive;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.image.TextureLoader;
-
+import org.jogamp.java3d.utils.geometry.GeometryServiceImpl;
 import repast.simphony.visualization.visualization3D.style.Style3D;
 import repast.simphony.visualization.visualization3D.style.TaggedAppearance;
 import repast.simphony.visualization.visualization3D.style.TaggedBranchGroup;
@@ -31,7 +31,7 @@ public class idiotypicNetworkStyle3DApc implements Style3D<AntigenPresentingCell
 		
 	}
 	
-	@Override
+
 	public TaggedBranchGroup getBranchGroup(AntigenPresentingCell apc, TaggedBranchGroup taggedGroup) {
 		if (taggedGroup == null || taggedGroup.getTag() == null) {
 			taggedGroup = new TaggedBranchGroup("DEFAULT");
@@ -45,7 +45,7 @@ public class idiotypicNetworkStyle3DApc implements Style3D<AntigenPresentingCell
 	    ap.setTextureAttributes(texAttr);
 			
 			int primflags = Primitive.GENERATE_NORMALS + Primitive.GENERATE_TEXTURE_COORDS;
-			Sphere sphere = new Sphere(0.04f, primflags,60);
+			Sphere sphere = new Sphere(0.08f, primflags,60);
 
 			Shape3D shape = new Shape3D(sphere.getShape().getGeometry(),ap);
 			shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
@@ -63,8 +63,8 @@ public class idiotypicNetworkStyle3DApc implements Style3D<AntigenPresentingCell
 		return null; 
 	}
 	public String getLabel(AntigenPresentingCell apc, String currentLabel) {		
-		//return moon.getName();
 		return null;
+		//return "Apc";
 	}
 	public Color getLabelColor(AntigenPresentingCell apc, Color currentColor) {
 		return Color.YELLOW;

@@ -8,13 +8,22 @@ import org.jogamp.java3d.Appearance;
 import org.jogamp.java3d.Shape3D;
 import org.jogamp.java3d.Texture;
 import org.jogamp.java3d.TextureAttributes;
+import org.jogamp.java3d.Transform3D;
+import org.jogamp.java3d.TransformGroup;
 import org.jogamp.java3d.utils.geometry.Primitive;
 import org.jogamp.java3d.utils.geometry.Sphere;
 import org.jogamp.java3d.utils.image.TextureLoader;
+import org.jogamp.vecmath.Vector3d;
+import org.jogamp.vecmath.Vector3f;
+import org.jogamp.java3d.utils.geometry.GeometryServiceImpl;
 
+
+import repast.simphony.visualization.visualization3D.AppearanceFactory;
+import repast.simphony.visualization.visualization3D.ShapeFactory;
 import repast.simphony.visualization.visualization3D.style.Style3D;
 import repast.simphony.visualization.visualization3D.style.TaggedAppearance;
 import repast.simphony.visualization.visualization3D.style.TaggedBranchGroup;
+
 
 
 public class idiotypicNetworkStyle3DAntigen implements Style3D<Antigen> {
@@ -32,7 +41,7 @@ public class idiotypicNetworkStyle3DAntigen implements Style3D<Antigen> {
 		
 	}
 	
-	@Override
+	
 	public TaggedBranchGroup getBranchGroup(Antigen antigen, TaggedBranchGroup taggedGroup) {
 		if (taggedGroup == null || taggedGroup.getTag() == null) {
 			taggedGroup = new TaggedBranchGroup("DEFAULT");
@@ -46,7 +55,7 @@ public class idiotypicNetworkStyle3DAntigen implements Style3D<Antigen> {
 	    ap.setTextureAttributes(texAttr);
 			
 			int primflags = Primitive.GENERATE_NORMALS + Primitive.GENERATE_TEXTURE_COORDS;
-			Sphere sphere = new Sphere(0.04f, primflags,60);
+			Sphere sphere = new Sphere(0.08f, primflags,60);
 
 			Shape3D shape = new Shape3D(sphere.getShape().getGeometry(),ap);
 			shape.setCapability(Shape3D.ALLOW_APPEARANCE_READ);
@@ -91,6 +100,5 @@ public class idiotypicNetworkStyle3DAntigen implements Style3D<Antigen> {
 	public float[] getScale(Antigen antigen) {
 		return null;
 	}
-	
 
 }
