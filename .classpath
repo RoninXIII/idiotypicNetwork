@@ -9,7 +9,5 @@
 	<classpathentry kind="con" path="GROOVY_DSL_SUPPORT"/>
 	<classpathentry kind="con" path="GROOVY_SUPPORT"/>
 	<classpathentry kind="con" path="REPAST_SIMPHONY_SUPPORT"/>
-	<classpathentry kind="lib" path="C:/Users/Mario/Downloads/j3dutils.jar"/>
-	<classpathentry kind="lib" path="C:/Users/Mario/Downloads/j3d-core-utils-1.3.1.jar/j3d-core-utils-1.3.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

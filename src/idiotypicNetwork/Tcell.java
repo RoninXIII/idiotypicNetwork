@@ -188,11 +188,7 @@ public class Tcell {
 
 	}
 
-	private int getAntibodiesFromId(int id) {
 
-		return 0;
-
-	}
 
 	// Retrieve antigen from the just met Apc
 	// When i enter this method i know for sure that i will get an Apc
@@ -301,10 +297,12 @@ public class Tcell {
 		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY(), pt.getZ())) {
 			if (obj instanceof Antibody) {
 				antibodiesToSuppressList.add(obj);
-			}else if (obj instanceof Bcell) {
+			}else if (obj instanceof Bcell && !(obj instanceof MemoryKeeperCell)) {
 				bcellsToSuppressList.add(obj);
 			}
 		}
+		
+		
 
 		for (Object object : antibodiesToSuppressList) {
 			Antibody antibody = (Antibody) object;

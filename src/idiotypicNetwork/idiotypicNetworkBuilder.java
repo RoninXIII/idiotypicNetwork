@@ -45,8 +45,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 				new WrapAroundBorders(), new SimpleGridAdder<Object>(), true, x, y, z));
 
 		Parameters params = RunEnvironment.getInstance().getParameters();
-		int bCellCount = params.getInteger("cell_count");
-		// int tCellCount = params.getInteger("Tcell_count");
+
 		int antigenCount = params.getInteger("Antigen_count");
 		int apcCount = params.getInteger("APC_count");
 
