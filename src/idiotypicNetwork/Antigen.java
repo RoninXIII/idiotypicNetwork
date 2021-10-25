@@ -4,6 +4,7 @@
 package idiotypicNetwork;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import repast.simphony.context.Context;
@@ -32,6 +33,7 @@ public class Antigen {
 	protected int id;
 	protected String color = "";
 	protected int lifeSpan = 0;
+	public static HashMap<Integer, Integer> antigensHashMap = new HashMap<Integer, Integer>();
 
 	public Antigen(ContinuousSpace<Object> space, Grid<Object> grid, int id) {
 		super();

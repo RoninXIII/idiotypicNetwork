@@ -1071,3 +1071,26 @@ Caused by: javax.imageio.IIOException: Can't read input file!
 	at java.desktop/javax.imageio.ImageIO.read(ImageIO.java:1308)
 	at org.jogamp.java3d.utils.image.TextureLoader$1.run(TextureLoader.java:350)
 	... 60 more
+FATAL [Thread-2] 2021-10-13 00:23:01,249 repast.simphony.ui.GUIScheduleRunner - RunTimeException when running the schedule
+Current tick (300.0)
+java.lang.RuntimeException: java.lang.reflect.InvocationTargetException
+	at repast.simphony.engine.schedule.DynamicTargetAction.execute(DynamicTargetAction.java:72)
+	at repast.simphony.engine.controller.ScheduledMethodControllerAction$ScheduleMethodAllAction.execute(ScheduledMethodControllerAction.java:336)
+	at repast.simphony.engine.schedule.DefaultAction.execute(DefaultAction.java:38)
+	at repast.simphony.engine.schedule.ScheduleGroup.executeList(ScheduleGroup.java:205)
+	at repast.simphony.engine.schedule.ScheduleGroup.execute(ScheduleGroup.java:231)
+	at repast.simphony.engine.schedule.Schedule.execute(Schedule.java:352)
+	at repast.simphony.ui.GUIScheduleRunner$ScheduleLoopRunnable.run(GUIScheduleRunner.java:52)
+	at java.base/java.lang.Thread.run(Thread.java:834)
+Caused by: java.lang.reflect.InvocationTargetException
+	at idiotypicNetwork.Antigen$$FastClassByCGLIB$$c6eeba2a.invoke(<generated>)
+	at net.sf.cglib.reflect.FastMethod.invoke(FastMethod.java:53)
+	at repast.simphony.engine.schedule.DynamicTargetAction.execute(DynamicTargetAction.java:69)
+	... 7 more
+Caused by: java.lang.NullPointerException
+	at repast.simphony.query.space.grid.GridCellNgh.setupMinMax(GridCellNgh.java:80)
+	at repast.simphony.query.space.grid.GridCellNgh.<init>(GridCellNgh.java:48)
+	at idiotypicNetwork.Antigen.getNeighborhood(Antigen.java:85)
+	at idiotypicNetwork.Antigen.cloneAntigen(Antigen.java:98)
+	at idiotypicNetwork.Antigen.step(Antigen.java:73)
+	... 10 more

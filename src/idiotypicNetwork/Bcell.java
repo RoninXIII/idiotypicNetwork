@@ -12,6 +12,7 @@ import org.jfree.chart.util.DirectionalGradientPaintTransformer;
 
 import com.sun.source.util.TreePathScanner;
 
+import bsh.This;
 import repast.simphony.context.Context;
 import repast.simphony.engine.environment.RunEnvironment;
 import repast.simphony.engine.schedule.Schedule;
@@ -116,7 +117,7 @@ public class Bcell {
 
 		} else if (this.type == "naive" && this.lookForTcell()) {
 			Tcell tcell = this.getTcell();
-		
+
 			if (tcell.type == "helper" && tcell.type2 == "activated" && tcell.antigenId == this.antigenId) {
 				this.type = typeList[1];
 				this.antigenId = tcell.antigenId;
@@ -128,14 +129,13 @@ public class Bcell {
 		} else if (this.type == "activated" && this.lookForTcell()) {
 
 			Tcell tcell = this.getTcell();
-			
+
 			if (tcell.type == "helper" && tcell.type2 == "activated" && tcell.antigenId == this.antigenId) {
 				this.releaseMoreAntibodies();
 				return;
 			}
 
 		}
-
 
 		GridPoint pointWithMostAntigens = null;
 		int maxCount = -1;
@@ -150,8 +150,6 @@ public class Bcell {
 		this.moveTowards(pointWithMostAntigens);
 
 	}
-
-
 
 	public List<GridCell<Object>> getNeighborhood() {
 
@@ -271,17 +269,20 @@ public class Bcell {
 	}
 
 	public void cloneCell() {
-
-		List<GridCell<Object>> gridCells = this.getNeighborhood();
-		int index = RandomHelper.nextIntFromTo(0, gridCells.size() - 1);
-		GridCell<Object> gridCell = gridCells.get(index);
-		Context<Object> context = ContextUtils.getContext(this);
-		GridPoint pt = grid.getLocation(this);
-		NdPoint spacePt = space.getLocation(this);
-		MemoryKeeperCell cell = new MemoryKeeperCell(space, grid, "activated", this.id, this.antigenId);
-		context.add(cell);
-		grid.moveTo(cell, pt.getX(), pt.getY(), pt.getZ());
-		space.moveTo(cell, spacePt.getX(), spacePt.getY(), spacePt.getZ());
+		Antigen antigen = new Antigen(space, grid, 99);
+		int antigensNumber = antigen.antigensHashMap.get(this.antigenId);
+		if (antigensNumber < 4) {
+			//Do nothing, there will be no memory
+		} else {
+			Context<Object> context = ContextUtils.getContext(this);
+			GridPoint pt = grid.getLocation(this);
+			NdPoint spacePt = space.getLocation(this);
+			MemoryKeeperCell cell = new MemoryKeeperCell(space, grid, "activated", this.id, this.antigenId);
+			context.add(cell);
+			grid.moveTo(cell, pt.getX(), pt.getY(), pt.getZ());
+			space.moveTo(cell, spacePt.getX(), spacePt.getY(), spacePt.getZ());
+		}
+		
 
 	}
 

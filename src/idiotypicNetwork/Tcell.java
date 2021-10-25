@@ -157,13 +157,13 @@ public class Tcell {
 		Bcell bcell = new Bcell(space, grid, "", 0);
 		// Number of antibodies for each antigen id
 		HashMap<Integer, Integer> antibodiesHashMap = bcell.antibodiesHashMap;
-		List<Integer> antibodiesToKilList = new ArrayList<>();
+		List<Integer> antibodiesToKillList = new ArrayList<>();
 
 		// Loop through all antigens ids in the system
 		for (Integer id : antigensIds) {
 
 			if (this.getAntigensNumber(id) == 0) {
-				antibodiesToKilList.add(id);
+				antibodiesToKillList.add(id);
 
 			}
 
@@ -175,7 +175,7 @@ public class Tcell {
 			// met the antigen with
 			// the previous id.
 
-			if (antibodiesToKilList.contains(id) && antibodiesHashMap.get(id) >= 10) {
+			if (antibodiesToKillList.contains(id) && antibodiesHashMap.get(id) >= 10) {
 				antibodiesToSuppress.add(id);
 			}
 
@@ -297,7 +297,7 @@ public class Tcell {
 		for (Object obj : grid.getObjectsAt(pt.getX(), pt.getY(), pt.getZ())) {
 			if (obj instanceof Antibody) {
 				antibodiesToSuppressList.add(obj);
-			}else if (obj instanceof Bcell && !(obj instanceof MemoryKeeperCell)) {
+			}else if (obj instanceof Bcell ) {
 				bcellsToSuppressList.add(obj);
 			}
 		}

@@ -48,7 +48,7 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 
 		int antigenCount = params.getInteger("Antigen_count");
 		int apcCount = params.getInteger("APC_count");
-
+		Antigen antigenSample = new Antigen(space, grid, 0);
 		String[] typeList = { "helper", "suppressor" };
 
 		List<Integer> antigensIds = new ArrayList<>();
@@ -65,6 +65,12 @@ public class idiotypicNetworkBuilder implements ContextBuilder<Object> {
 			int id = RandomHelper.nextIntFromTo(0, 2);
 			antigensIds.add(id);
 			context.add(new Antigen(space, grid, id));
+			
+			if (antigenSample.antigensHashMap.containsKey(id)) {
+				antigenSample.antigensHashMap.put(id, antigenSample.antigensHashMap.get(id) + 1);
+			} else {
+				antigenSample.antigensHashMap.put(id, 1);
+			}
 		}
 		
 		Set<Integer> set = new HashSet<>(antigensIds);
